@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:p="http://www.springframework.org/schema/p" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:util="http://www.springframework.org/schema/util" xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xsi:schemaLocation="
+  http://www.springframework.org/schema/beans
+  http://www.springframework.org/schema/beans/spring-beans-4.2.xsd
+  http://www.springframework.org/schema/util
+  http://www.springframework.org/schema/util/spring-util-4.2.xsd
+  http://www.springframework.org/schema/context 
+  http://www.springframework.org/schema/context/spring-context-4.2.xsd
+  http://www.springframework.org/schema/mvc
+  http://www.springframework.org/schema/mvc/spring-mvc-4.2.xsd
+  http://www.springframework.org/schema/tx
+	http://www.springframework.org/schema/tx/spring-tx-2.0.xsd">
+	
+	<!-- 扫描所有的包 -->
+	<context:component-scan base-package="com.yhzh.*"></context:component-scan>
+	
+	<context:annotation-config></context:annotation-config>
+	<context:property-placeholder location="classpath:yhzh.properties" /><!-- 
+		加载配置文件 -->
+
+	<!-- 数据源连接池 -->
+	<!-- <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource"	destroy-method="close">
+		<property name="driverClass" value="org.sqlite.JDBC" />
+		<property name="jdbcUrl" value="${sqlite.jdbcUrl}" />
+
+	</bean> -->
+	
+	<!-- mysql数据源连接池 -->
+	   <bean id="dataSource"  
+        class="org.springframework.jdbc.datasource.DriverManagerDataSource">  
+        <property name="driverClassName" value="com.mysql.jdbc.Driver" />  
+        <!--注意一下&characterEncoding要修改为&amp;characterEncoding-->  
+    <property name="url" value="jdbc:mysql://localhost:3306/yhzh?useUnicode=true&amp;characterEncoding=utf-8"/>        
+        <property name="username" value="root"/>  
+        <property name="password" value="123" />  
+    </bean>  
+    
+    
+
+	<bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+		<property name="dataSource" ref="dataSource">	</property>
+	</bean>
+	<!-- 配置 NamedParameterJdbcTemplate, 该对象可以使用具名参数 -->
+	<bean id="namedParameterJdbcTemplate"
+		class="org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate">
+		<constructor-arg ref="dataSource"></constructor-arg>
+	</bean>
+	<!-- json工具类 -->
+	<bean id="jsonUtil" class="com.yhzh.util.JsonUtil"></bean>
+	<!-- 数据库操作dao -->
+	<bean id="baseDao" class="com.yhzh.zhyq.dao.BaseDao">
+		<!-- <property name="jdbcTemplate" ref="jdbcTemplate"></property> -->
+	</bean>
+	<!-- 智能照明数据库操作dao -->
+	<bean id="znzmDao" class="com.yhzh.znzm.dao.ZnzmDao"></bean>
+	<!-- 云华智慧数据库操作dao -->
+	<bean id="yhzhDao" class="com.yhzh.zhyq.dao.YhzhDao"></bean>
+	<!-- 风机数据库操作dao -->
+	<bean id="airDao" class="com.yhzh.bacnet.dao.AirCondiDao"></bean>
+	<!-- 日程表操作dao -->
+	<bean id="scheduleDao" class="com.yhzh.schedule.dao.ScheduleDao"></bean>
+	 <!-- 点控制公共类dao -->
+ <bean id="pointControl" class="com.yhzh.pub.business.PointControl"></bean>
+
+<!-- 	<bean id="test" class="com.yhzh.schedule.test"></bean>  -->
+	
+	<!-- 获取spring实例帮助类 -->
+	<bean id="springContextHelper" class="com.yhzh.util.SpringContextHelper"></bean>
+
+	<!-- socket服务 -->
+	<bean id="serverSocketThread" class="com.yhzh.zhyq.socket.ServerSocketThread">
+		<constructor-arg index="0" value="${socketserver.port}"></constructor-arg>
+	</bean>
+
+	<!-- websocket客户端 -->
+	<bean id="wSocketClientEng" class="com.yhzh.zhyq.websocket.WSocketClientEng">
+		<constructor-arg index="0" value="${websocket.url}"></constructor-arg>
+		<constructor-arg index="1" value="${websocket.clientId}"></constructor-arg>
+		<constructor-arg index="2" value="${websocket.clientName}"></constructor-arg>
+		<constructor-arg index="3" value="${websocket.eventName}"></constructor-arg>
+	</bean>
+
+	<!-- 事务控制 -->
+	<bean id="txManager"
+		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+	<!-- enable transaction annotation support -->
+	<tx:annotation-driven transaction-manager="txManager" />
+
+
+	<!-- 获取spring实例帮助类 -->
+	<bean id="beanUtil" class="com.yhzh.util.BeanUtil"></bean>
+
+	
+	<bean id="helloworld" class="com.yhzh.zhyq.test.Helloworld"></bean>
+	
+	<bean id="znzminit" class="com.yhzh.znzm.socketdc.Init" init-method="start"></bean> 
+ 	<bean id="bacnetManager" class="com.yhzh.bacnet.BacnetManager" init-method="initBaConList"></bean> 
+	<bean id="scheduleEngine" class="com.yhzh.schedule.ScheduleEngine" init-method="initStart"></bean>
+
+
+
+</beans>

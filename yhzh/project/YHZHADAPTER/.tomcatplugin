@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tomcatProjectProperties>
+    <rootDir>/WebContent</rootDir>
+    <exportSource>false</exportSource>
+    <reloadable>true</reloadable>
+    <redirectLogger>true</redirectLogger>
+    <updateXml>true</updateXml>
+    <warLocation></warLocation>
+    <extraInfo>%3C%21--%3CResource+name%3D%22jdbc%2Feap_ds%22+type%3D%22javax.sql.DataSource%22%0D%0A%09%09driverClassName%3D%22oracle.jdbc.driver.OracleDriver%22%0D%0A%09%09url%3D%22jdbc%3Aoracle%3Athin%3A%40127.0.0.1%3A1521%3Aorcl%22%0D%0A%09%09username%3D%22ereport%22%0D%0A%09%09password%3D%22ereport%22%0D%0A%09%09maxActive%3D%2212%22%0D%0A%09%09maxIdle%3D%228%22%0D%0A%09%09maxWait%3D%2210000%22%2F%3E--%3E</extraInfo>
+    <webPath>YHZHADAPTER</webPath>
+</tomcatProjectProperties>

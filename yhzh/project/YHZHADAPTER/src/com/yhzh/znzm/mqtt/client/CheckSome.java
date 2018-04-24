@@ -9,19 +9,26 @@ import org.apache.commons.logging.LogFactory;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.json.JSONObject;
 
-import com.yhzh.zhyq.websocket.WSocketClientEng;
+import com.yhzh.zhyq.socket.Nsocket;
 import com.yhzh.znzm.mqtt.server.Server;
-import com.yhzh.znzm.socketdc.SocketClientdc;
+import com.yhzh.znzm.socketdc.Zmonline;
 
 public class CheckSome extends Thread {
-	public static Log LOG = LogFactory.getLog(WSocketClientEng.class); 
-
-	String a = null;
-
-	public CheckSome(String a) {
-		this.a = a;
+	    public static Log LOG = LogFactory.getLog(CheckSome.class);
+	    String a = null;
+	    private  Nsocket nsocket; 
+	    private static int time=600;
+	    
+	    
+	    
+	    
+	    
+	    
+	public CheckSome(String a,Nsocket nsocket){
+		this.nsocket=nsocket;
+		this.a=a;
 	}
-
+  
 	// @Override
 	public void run() {
 		String back = "{\"act\":\"postReply\",\"flag\":\"success\"}";
@@ -33,10 +40,11 @@ public class CheckSome extends Thread {
 				//System.err.print("断开连接，close，等待重连");
 			} else {
 				JSONObject obj = new JSONObject(a);
-				//System.out.println("信息种类" + obj.get("act"));
+				// LOG.debug("信息种类" + obj.get("act"));
 				String act = (String) obj.get("act");
 				
 				switch (act) {
+				
 				case "loopFeedback":
 					// 回路反馈，发送到适配器
 					String mac = (String) obj.get("mac");
@@ -79,15 +87,25 @@ public class CheckSome extends Thread {
 					String b = "{\"act\":\"update\",\"content\":{\"type\":\"cellDimmer\",\"mac\":\""
 							+ mac + "\",\"data\":[" + c + "]}}";
 
-					//System.out.println("发送到适配器，封装："+b);
+					// LOG.debug("发送到适配器，封装："+b);
 					senttosocket(b);
 					break;
 				case "deviceOnline":
 			       /*需要详细设计
 			        * 会返回网关在线数据，定义时间间隔加以判断是否离线
-*/					
+			        * 
+*/			
+
+					Zmonline ssc = new Zmonline(nsocket);
+					ssc.set();
+					if (time < 1) {
+						 LOG.debug("连接超时，即将启动重连,time:"+time);
+	    //启动，待完善
+						new Client(nsocket).start();
+    }
 					
 					
+
 					
 					break;
 				case "areaFeedback":
@@ -121,20 +139,20 @@ public class CheckSome extends Thread {
 					senttomac((String) obj.get("gatewayPlaintext"),back);
 					break;
 				case "postArea":
-					System.out.println("发送"+back);
+					 LOG.debug("发送"+back);
 					senttomac((String) obj.get("gatewayPlaintext"),back);
 					break;
 				case "postGroup":
-					System.out.println("发送"+back);
+					 LOG.debug("发送"+back);
 					senttomac((String) obj.get("gatewayPlaintext"),back);
 				case "postGateway":
-					System.out.println((String) obj.get("gatewayPlaintext"));
-					System.out.println("发送"+back);
+					 LOG.debug((String) obj.get("gatewayPlaintext"));
+					 LOG.debug("发送"+back);
 					senttomac((String) obj.get("gatewayPlaintext"),back);
 					break;
 				case "setReply":
-					System.out.println("发送"+back);
-					System.out.println("设置成功");
+					 LOG.debug("发送"+back);
+					 LOG.debug("设置成功");
 					break;
 				default:
 					break;
@@ -155,7 +173,10 @@ public class CheckSome extends Thread {
 
 	// 上传回路信息到适配器
 	public void senttosocket(String back) {
-		boolean bRst = SocketClientdc.sentMsgToSserver(back);
+		
+//		去socket，其四
+		nsocket.nosocket(back);
+		/*boolean bRst = SocketClientdc.sentMsgToSserver(back);*/
 	}
 	//根据mac地址分别发送到不同网关
 	public static void senttomac(String mac,String data) throws MqttException {
@@ -186,5 +207,9 @@ public class CheckSome extends Thread {
 		
 		
 	}
-
+	
+	public void back(){
+		time=0;
+	}
+	
 }

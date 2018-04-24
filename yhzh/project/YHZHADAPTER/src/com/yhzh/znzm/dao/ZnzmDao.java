@@ -123,4 +123,28 @@ public class ZnzmDao {
     	}
 		return list;
 	}
+	/**找到点编号
+	 * @return
+	 */
+	public List<Map<String, Object>> getallzmpointid(){
+		String sql = "select pointid from yhzh_point where pointname='回路输入'";
+		Map<String,Object> paramMap1 = new HashMap<String,Object>();
+    	List<Map<String,Object>> list = baseDao.queryForList(sql, paramMap1);
+    	if(null != list && list.size() > 0){
+    		
+    	}
+		return list;
+	}
+	/**找到点编号
+	 * @return
+	 */
+	public List<Map<String, Object>> getallzmMac(){
+		String sql = "select pointid from yhzh_controller where controller='智能照明'";
+		Map<String,Object> paramMap1 = new HashMap<String,Object>();
+    	List<Map<String,Object>> list = baseDao.queryForList(sql, paramMap1);
+    	if(null != list && list.size() > 0){
+    		
+    	}
+		return list;
+	}
 }

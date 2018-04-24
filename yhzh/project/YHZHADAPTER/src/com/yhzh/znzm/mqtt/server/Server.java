@@ -9,6 +9,8 @@ import org.eclipse.paho.client.mqttv3.MqttPersistenceException;
 import org.eclipse.paho.client.mqttv3.MqttTopic;
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 
+import com.yhzh.zhyq.socket.Nsocket;
+//import com.yhzh.zhyq.socket.SocketClient;
 import com.yhzh.znzm.mqtt.client.LogObb;
 import com.yhzh.znzm.mqtt.client.PushCallback;
 
@@ -30,6 +32,7 @@ public class Server {
 	public static final String TOPICFIVE = "DYCTRLDOWN/0011c1c8016b";
 	public static final String TOPICsix = "DYCTRLDOWN/4011c1d0021a";
 	private static final String clientid = "server";
+    private  Nsocket nsocket; 
 
 	private MqttClient client;
 	private MqttTopic topiczm;
@@ -60,7 +63,7 @@ public class Server {
 		// 设置会话心跳时间
 		options.setKeepAliveInterval(20);
 		try {
-			client.setCallback(new PushCallback());
+			client.setCallback(new PushCallback(nsocket));
 			client.connect(options);
 			topiczm = client.getTopic(TOPICzm);
 			topic1 = client.getTopic(TOPICone);

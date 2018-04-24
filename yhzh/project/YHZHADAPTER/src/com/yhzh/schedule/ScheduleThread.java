@@ -53,6 +53,7 @@ public class ScheduleThread extends Thread{
 	private int v_openTimes = 0;
 	//触发控制 控制关的已轮询次数，开的时候要重置为0
 	private int v_closeTimes = 0;
+	SimpleDateFormat sdf = new SimpleDateFormat("yy-MM-dd HH:mm:ss");
 	public  ScheduleThread(ScheduleDao scheduleDao,YhzhDao yhzhDao,PointControl pointControl){
 		this.scheduleDao=scheduleDao;
 		this.yhzhDao =yhzhDao;
@@ -82,18 +83,17 @@ public class ScheduleThread extends Thread{
 											//获取状态点值
 											
 											String inPointValue = yhzhDao.getpointValuebypointid(schPoint.getOutpointid());
-											LOG.debug("测试是否运行schPoint.getOutpointid()"+schPoint.getOutpointid()+"inPointValue"+inPointValue);
+											LOG.debug("查看是否开启schPoint.getOutpointid()"+schPoint.getOutpointid()+"inPointValue"+inPointValue);
 											if("0".equals(inPointValue)){
 												//状态点为0，则写入1
 												pointControl.writePoint(schPoint.getOutpointid(), "1");
 //保存日程表日志，暂时注释掉。待完善 
-												SimpleDateFormat sdf = new SimpleDateFormat("yy-MM-dd HH:mm:ss");
-											
+												
 											scheduleDao.insYhzhScheduleLog(sdf.format(new Date()) , scheduleid, schPoint.getScheduleid(),
 														schPoint.getOutpointid(), "1", schPoint.getInpointid(), schPoint.getValue(), "null");
 											}
 										}
-										Thread.sleep(500);
+										Thread.sleep(100);
 									}
 									if("0".equals(controlmode)){ //单次控制
 										v_openTimes++;
@@ -109,11 +109,15 @@ public class ScheduleThread extends Thread{
 									for(SchPointRelBean schPoint: pointList){
 										//获取状态点值
 										String inPointValue = yhzhDao.getpointValuebypointid(schPoint.getOutpointid());
+										LOG.debug("查看是否关闭schPoint.getOutpointid()"+schPoint.getOutpointid()+"inPointValue"+inPointValue);
 										if("1".equals(inPointValue)){
 											//状态点为1，则写入0
 											
 											pointControl.writePoint(schPoint.getOutpointid(), "0");
+											scheduleDao.insYhzhScheduleLog(sdf.format(new Date()) , scheduleid, schPoint.getScheduleid(),
+													schPoint.getOutpointid(), "0", schPoint.getInpointid(), schPoint.getValue(), "null");
 										}
+										Thread.sleep(100);
 									}
 									if("0".equals(controlmode)){ //单次控制
 										v_closeTimes++;

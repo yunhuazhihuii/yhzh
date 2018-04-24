@@ -1,18 +1,18 @@
 package com.yhzh.znzm.mqtt.server;
 
+import java.util.Map;
+
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+//import com.yhzh.zhyq.socket.SocketClient;
 import com.yhzh.znzm.mqtt.client.CheckSome;
 import com.yhzh.znzm.mqtt.client.LogObb;
-import com.yhzh.znzm.socketdc.SocketClientdc;
-import com.yhzh.znzm.socketdc.Test;
 
 public class Json {
 	static Server server;
 	static LogObb logbb;
-
 	public static void main(String args[]) {
 
 	}
@@ -37,7 +37,7 @@ public class Json {
 				// 返回success;
 				String back = "{'act':' control ','succcess':'0', 'message':''}";
 
-				boolean bRst = SocketClientdc.sentMsgToSserver(back);
+//				boolean bRst = SocketClientdc.sentMsgToSserver(back);
 
 				break;
 			}
@@ -49,11 +49,15 @@ public class Json {
 			if (type == "allmode") {
 				mode(object);
 				String back = "{'act':' control ','succcess':'0', 'message':''}";
-
-				boolean bRst = SocketClientdc.sentMsgToSserver(back);
+				
+			
+//				boolean bRst = SocketClientdc.sentMsgToSserver(back);
 				// 返回success;
 				break;
 			}
+			break;
+		case "getDataRequest":
+			getDataRequest();
 			break;
 		case "loopStatusRequ":
 			JSONObject nv = (JSONObject) obj.get("content");
@@ -62,66 +66,7 @@ public class Json {
 		case "register":
 			String register = (String) obj.get("succcess");
 
-			// 写死的数据
-
-			/*String back = "{\"act\":\"update\",\"content\":{\"type\":\"cellDimmer\",\"mac\":\"0011c1c8016b\",\"data\":["
-					+ "{\"ModuleMac\":\"200f82a01436\",\"cellIndex\":\"1\",\"value\":\"1\"},"
-					+ "{\"ModuleMac\":\"200f82a01436\",\"cellIndex\":\"2\",\"value\":\"0\"},"
-					+ "{\"ModuleMac\":\"200f82a01436\",\"cellIndex\":\"3\",\"value\":\"0\"},"
-					+ "{\"ModuleMac\":\"200f82a01436\",\"cellIndex\":\"0\",\"value\":\"0\"},"
-					+ "{\"ModuleMac\":\"100f6298103e\",\"cellIndex\":\"1\",\"value\":\"0\"},"
-					+ "{\"ModuleMac\":\"100f6298103e\",\"cellIndex\":\"2\",\"value\":\"0\"},"
-					+ "{\"ModuleMac\":\"100f6298103e\",\"cellIndex\":\"3\",\"value\":\"0\"},"
-					+ "{\"ModuleMac\":\"100f6298103e\",\"cellIndex\":\"0\",\"value\":\"0\"},"
-					+ "{\"ModuleMac\":\"200f829813fe\",\"cellIndex\":\"1\",\"value\":\"0\"},"
-					+ "{\"ModuleMac\":\"200f829813fe\",\"cellIndex\":\"2\",\"value\":\"0\"},"
-					+ "{\"ModuleMac\":\"200f829813fe\",\"cellIndex\":\"3\",\"value\":\"0\"},"
-					+ "{\"ModuleMac\":\"200f829813fe\",\"cellIndex\":\"0\",\"value\":\"0\"},"
-					+ "{\"ModuleMac\":\"701062c00278\",\"cellIndex\":\"1\",\"value\":\"0\"},"
-					+ "{\"ModuleMac\":\"701062c00278\",\"cellIndex\":\"2\",\"value\":\"0\"},"
-					+ "{\"ModuleMac\":\"701062c00278\",\"cellIndex\":\"3\",\"value\":\"0\"},"
-					+ "{\"ModuleMac\":\"701062c00278\",\"cellIndex\":\"0\",\"value\":\"0\"}]}}";
-			String back1 = "{\"act\":\"update\",\"content\":{\"type\":\"cellDimmer\",\"mac\":\"0011c1d00171\",\"data\":["
-					+ "{\"ModuleMac\":\"701062c00271\",\"cellIndex\":\"1\",\"value\":\"1\"},"
-					+ "{\"ModuleMac\":\"701062c00271\",\"cellIndex\":\"2\",\"value\":\"0\"},"
-					+ "{\"ModuleMac\":\"701062c00271\",\"cellIndex\":\"3\",\"value\":\"0\"},"
-					+ "{\"ModuleMac\":\"701062c00271\",\"cellIndex\":\"0\",\"value\":\"0\"},"
-					+ "{\"ModuleMac\":\"701072280373\",\"cellIndex\":\"1\",\"value\":\"0\"},"
-					+ "{\"ModuleMac\":\"701072280373\",\"cellIndex\":\"2\",\"value\":\"0\"},"
-					+ "{\"ModuleMac\":\"701072280373\",\"cellIndex\":\"3\",\"value\":\"0\"},"
-					+ "{\"ModuleMac\":\"701072280373\",\"cellIndex\":\"0\",\"value\":\"0\"},"
-					+ "{\"ModuleMac\":\"200f82a0145f\",\"cellIndex\":\"1\",\"value\":\"0\"},"
-					+ "{\"ModuleMac\":\"200f82a0145f\",\"cellIndex\":\"2\",\"value\":\"0\"},"
-					+ "{\"ModuleMac\":\"200f82a0145f\",\"cellIndex\":\"3\",\"value\":\"0\"},"
-					+ "{\"ModuleMac\":\"200f82a0145f\",\"cellIndex\":\"0\",\"value\":\"0\"},"
-					+ "{\"ModuleMac\":\"701072280387\",\"cellIndex\":\"1\",\"value\":\"0\"},"
-					+ "{\"ModuleMac\":\"701072280387\",\"cellIndex\":\"2\",\"value\":\"0\"},"
-					+ "{\"ModuleMac\":\"701072280387\",\"cellIndex\":\"3\",\"value\":\"0\"},"
-					+ "{\"ModuleMac\":\"701072280387\",\"cellIndex\":\"0\",\"value\":\"0\"}]}}";
-			String back2 = "{\"act\":\"update\",\"content\":{\"type\":\"cellDimmer\",\"mac\":\"4011c1d0021a\",\"data\":["
-					+ "{\"ModuleMac\":\"200f82a01440\",\"cellIndex\":\"1\",\"value\":\"1\"},"
-					+ "{\"ModuleMac\":\"200f82a01440\",\"cellIndex\":\"2\",\"value\":\"0\"},"
-					+ "{\"ModuleMac\":\"200f82a01440\",\"cellIndex\":\"3\",\"value\":\"0\"},"
-					+ "{\"ModuleMac\":\"200f82a01440\",\"cellIndex\":\"0\",\"value\":\"0\"},"
-					+ "{\"ModuleMac\":\"701062c00244\",\"cellIndex\":\"1\",\"value\":\"0\"},"
-					+ "{\"ModuleMac\":\"701062c00244\",\"cellIndex\":\"2\",\"value\":\"0\"},"
-					+ "{\"ModuleMac\":\"701062c00244\",\"cellIndex\":\"3\",\"value\":\"0\"},"
-					+ "{\"ModuleMac\":\"701062c00244\",\"cellIndex\":\"0\",\"value\":\"0\"},"
-					+ "{\"ModuleMac\":\"701062e002f0\",\"cellIndex\":\"1\",\"value\":\"0\"},"
-					+ "{\"ModuleMac\":\"701062e002f0\",\"cellIndex\":\"2\",\"value\":\"0\"},"
-					+ "{\"ModuleMac\":\"701062e002f0\",\"cellIndex\":\"3\",\"value\":\"0\"},"
-					+ "{\"ModuleMac\":\"701062e002f0\",\"cellIndex\":\"0\",\"value\":\"0\"},"
-					+ "{\"ModuleMac\":\"701072280383\",\"cellIndex\":\"1\",\"value\":\"0\"},"
-					+ "{\"ModuleMac\":\"701072280383\",\"cellIndex\":\"2\",\"value\":\"0\"},"
-					+ "{\"ModuleMac\":\"111111111111\",\"cellIndex\":\"0\",\"value\":\"3\"},"
-					+ "{\"ModuleMac\":\"701072280383\",\"cellIndex\":\"3\",\"value\":\"0\"},"
-					+ "{\"ModuleMac\":\"701072280383\",\"cellIndex\":\"0\",\"value\":\"0\"}]}}";
-		String back3 = "{\"act\":\"update\",\"content\":{\"type\":\"cellDimmer\",\"mac\":\"4011c1d0021a\",\"data\":["
-					+ "{\"ModuleMac\":\"111111111111\",\"cellIndex\":\"0\",\"value\":\"3\"}]}}";
-			boolean bRst3 = SocketClientdc.sentMsgToSserver(back3);*/
-			/*boolean bRst = SocketClientdc.sentMsgToSserver(back);
-			boolean bRst1 = SocketClientdc.sentMsgToSserver(back1);
-			boolean bRst2 = SocketClientdc.sentMsgToSserver(back2);*/
+			
 			
 
 			break;
@@ -266,7 +211,7 @@ default:
 
 	}
 
-	// 获取网关数据（暂时搁置）
+	// 获取网关数据
 	public static void getDataRequest() throws MqttException {
 		String str1 = "{\"act\":\"getDataRequest\"}";
 

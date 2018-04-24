@@ -5,14 +5,7 @@ import org.apache.commons.logging.LogFactory;
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
 import org.eclipse.paho.client.mqttv3.MqttCallback;  
 import org.eclipse.paho.client.mqttv3.MqttMessage;  
-import org.json.JSONObject;
-
-
-
-
-
-import com.yhzh.schedule.ScheduleThread;
-import com.yhzh.zhyq.websocket.WSocketClientEng;
+import com.yhzh.zhyq.socket.Nsocket;
 
 import java.util.Date;
 import java.util.List;
@@ -38,7 +31,11 @@ public class PushCallback implements MqttCallback {
 	//日程线程列表
 	private List<Client> ClientThList;
 	
-	public static Log LOG = LogFactory.getLog(WSocketClientEng.class); 
+    private  Nsocket nsocket; 
+    public PushCallback(Nsocket nsocket){
+	this.nsocket=nsocket;
+}
+	public static Log LOG = LogFactory.getLog(PushCallback.class); 
 	  Client client;
     public void connectionLost(Throwable cause) {  
         // 连接丢失后，一般在这里面进行重连   
@@ -65,7 +62,7 @@ public class PushCallback implements MqttCallback {
         //System.out.println("接收消息主题 : " + topic+"接收消息Qos : " + message.getQos()+"接收消息内容 : " + obb+"时间:"+df.format(new Date())); 
         LogObb.savelog(obb);
 
-        CheckSome checksome=new CheckSome(obb);
+        CheckSome checksome=new CheckSome(obb,nsocket);
         checksome.start();
     }  
 

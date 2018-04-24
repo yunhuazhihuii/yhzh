@@ -9,8 +9,9 @@ import javax.annotation.Resource;
 import com.yhzh.bacnet.BacnetManager;
 import com.yhzh.schedule.dao.ScheduleDao;
 import com.yhzh.zhyq.dao.YhzhDao;
-import com.yhzh.zhyq.socket.ServerSocketThread;
-import com.yhzh.zhyq.socket.SocketClient;
+import com.yhzh.zhyq.socket.Nsocket;
+//import com.yhzh.zhyq.socket.ServerSocketThread;
+//import com.yhzh.zhyq.socket.SocketClient;
 
 /**点控制公共类
  * @author samsun 2018-1-27
@@ -19,13 +20,14 @@ import com.yhzh.zhyq.socket.SocketClient;
 public class PointControl {
 	@Resource 
 	ScheduleDao scheduleDao;
-    @Resource //注解注入
-    private ServerSocketThread serverSocketThread;
+//    @Resource //注解注入
+//    private ServerSocketThread serverSocketThread;
     @Resource //注解注入
     private BacnetManager bacnetManager;
     @Resource //注解注入
     private YhzhDao yhzhDao;
-    
+	@Resource
+	Nsocket nsocket;
     /**写点
      * @param pointId
      * @param value
@@ -38,9 +40,9 @@ public class PointControl {
 		String controllerid = (String)pointMap.get("controllerid");//控制器编号
 		if("1".equals(pointtype) || "2".equals(pointtype) || "3".equals(pointtype)){ //智能照明
 			//对于智能照明的点先认为是 第一个socketclient，后期再优化
-			List<SocketClient> sClientList  = serverSocketThread.getsClientList();
-			SocketClient socketClient = sClientList.get(0);
-			socketClient.writePoint(pointId, value);
+//			List<SocketClient> sClientList  = serverSocketThread.getsClientList();
+			//SocketClient socketClient = sClientList.get(0);
+			nsocket.writePoint(pointId, value);
 			//记录日志表 待补充
 //			scheduleDao.insYhzhScheduleLog( new Date(), scheduleid, scheduletimeid,
 //					 outpointid, outpointvalue, pointId, value, "");

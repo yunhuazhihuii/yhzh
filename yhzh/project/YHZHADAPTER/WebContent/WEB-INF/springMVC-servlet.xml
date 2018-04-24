@@ -71,10 +71,11 @@
 	<!-- 获取spring实例帮助类 -->
 	<bean id="springContextHelper" class="com.yhzh.util.SpringContextHelper"></bean>
 
-	<!-- socket服务 -->
+	<!-- socket服务 
 	<bean id="serverSocketThread" class="com.yhzh.zhyq.socket.ServerSocketThread">
 		<constructor-arg index="0" value="${socketserver.port}"></constructor-arg>
-	</bean>
+	</bean>-->
+	
 
 	<!-- websocket客户端 -->
 	<bean id="wSocketClientEng" class="com.yhzh.zhyq.websocket.WSocketClientEng">
@@ -98,11 +99,10 @@
 
 	
 	<bean id="helloworld" class="com.yhzh.zhyq.test.Helloworld"></bean>
-	
+	 <bean id="nsocket" class="com.yhzh.zhyq.socket.Nsocket"></bean> 
 	<bean id="znzminit" class="com.yhzh.znzm.socketdc.Init" init-method="start"></bean> 
  	<bean id="bacnetManager" class="com.yhzh.bacnet.BacnetManager" init-method="initBaConList"></bean> 
 	<bean id="scheduleEngine" class="com.yhzh.schedule.ScheduleEngine" init-method="initStart"></bean>
-
-
+   
 
 </beans>

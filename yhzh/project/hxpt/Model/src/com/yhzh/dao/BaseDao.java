@@ -24,7 +24,7 @@ public class BaseDao {
 	}
 	
 	/**
-	 * 增删改操�?
+	 * 增删改操作
 	 */
 	public synchronized int execSql(String sql,Map<String,Object> paramMap){
 		int affectRow = -1;

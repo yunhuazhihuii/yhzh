@@ -12,6 +12,7 @@ import com.yhzh.pojo.S0000002;
 import com.yhzh.pojo.S0000003;
 import com.yhzh.pojo.S1000000;
 import com.yhzh.pojo.S1100000;
+import com.yhzh.pojo.S1110000;
 
 public class ServerDao {
 	@Resource
@@ -43,38 +44,6 @@ public class ServerDao {
 //		scList = namedParameterJdbcTemplate.queryForList(sql, paramMap);
 		scList = baseDao.queryForList(sql, null);
 		return scList;
-	}
-	
-	/**
-	 * 从数据字典表中获得服务编码和服务单元编码
-	 * @return
-	 */
-	public List<Map<String, Object>> getServiceCode(){
-		String sql = "select * from S0000003 where F5='服务编码' or F5='服务单元编码'";
-		List<Map<String, Object>> list = baseDao.queryForList(sql, null);
-		return list;
-	}
-	
-	/**
-	 * 更新服务编码到数据字典表中
-	 * @param id
-	 * @return
-	 */
-	public int updateServiceCode(String serviceCode) {
-		String sql = "update S0000003 set F4='"+serviceCode+"'where F5='服务编码'";
-		int updateServiceCode = baseDao.execSql(sql, null);
-		return updateServiceCode;
-	}
-	
-	/**
-	 * 更新服务单元编码到数据字典表中
-	 * @param id
-	 * @return
-	 */
-	public int updateServiceUnitCode(String serviceUnitCode) {
-		String sql = "update S0000003 set F4='"+serviceUnitCode+"'where F5='服务单元编码'";
-		int updateServiceUnitCode = baseDao.execSql(sql, null);
-		return updateServiceUnitCode;
 	}
 	
 	/**
@@ -123,6 +92,84 @@ public class ServerDao {
 		List<Map<String, Object>> list = baseDao.queryForList(sql, null);
 		return list;
 	}
+	/**
+	 * 根据服务编码从S1000000表中查出相关的服务信息
+	 * @param ServerCode
+	 * @return
+	 */
+	public List<Map<String, Object>> findS1000000ByServerCode(String ServerCode) {
+		String sql = "select * from S1000000 where F1 = "+ServerCode;
+		List<Map<String, Object>> list = baseDao.queryForList(sql, null);
+		return list;
+	}
 	
+	/**
+	 * 将数据更新到S1000000表中
+	 * @param s1000000
+	 * @return
+	 */
+	public int updateS1000000(S1000000 s1000000) {
+		String sql = "update S1000000 set F2='"+s1000000.getF2()+"',F3='"+s1000000.getF3()+"',F4='"+s1000000.getF4()+"',F5='"+s1000000.getF5()+"',F6='"+s1000000.getF6()+"',F7='"+s1000000.getF7()+"',F8='"+s1000000.getF8()+"',F9='"+s1000000.getF9()+"',F10='"+s1000000.getF10()+"',F11='"+s1000000.getF11()+"' where F1='"+s1000000.getF1()+"'";
+		int updateS1000000 = baseDao.execSql(sql, null);
+		return updateS1000000;
+	}
 	
+	/**
+	 * 将数据更新到S0000002表中
+	 * @param s0000002
+	 * @return
+	 */
+	public int updateS0000002(S0000002 s0000002) {
+		System.out.println("将数据更新到S0000002表中的格式："+s0000002.getF3()+ s0000002.getF2());
+		String sql = "update S0000002 set F3='"+s0000002.getF3()+"' where F2='"+s0000002.getF2()+"'";
+		int updateS0000002 = baseDao.execSql(sql, null);
+		return updateS0000002;
+	}
+	
+	/**
+	 * 根据服务编码从S1000000表中查出相关的服务信息
+	 * @param ServerCode
+	 * @return
+	 */
+	public List<Map<String, Object>> findS1100000ByServerUnitCode(String ServerUnitCode) {
+		String sql = "select * from S1100000 where F2 = "+ServerUnitCode;
+		List<Map<String, Object>> list = baseDao.queryForList(sql, null);
+		return list;
+	}
+	/**
+	 * 将数据更新到S1100000表中
+	 * @param s1100000
+	 * @return
+	 */
+	public int updateS1100000(S1100000 s1100000) {
+		String sql = "update S1100000 set F2='"+s1100000.getF2()+"',F3='"+s1100000.getF3()+"',F4='"+s1100000.getF4()+"',F5='"+s1100000.getF5()+"',F6='"+s1100000.getF6()+"',F7='"+s1100000.getF7()+"',F8='"+s1100000.getF8()+"',F9='"+s1100000.getF9()+"',F10='"+s1100000.getF10()+"' where F1='"+s1100000.getF1()+"'";
+		int updateS1100000 = baseDao.execSql(sql, null);
+		return updateS1100000;
+	}
+	
+	/**
+	 * 向S1110000表中插入一条数据
+	 * @param s1110000
+	 * @return
+	 */
+	public int insertS1110000(S1110000 s1110000) {
+		String sql = "insert into S1110000(F1,F2,F3,F4,F5,F6,F7) values('"+s1110000.getF1()+"','"+s1110000.getF2()+"','"+s1110000.getF3()+"','"+s1110000.getF4()+"','"+s1110000.getF5()+"','"+s1110000.getF6()+"','"+s1110000.getF7()+"')";
+		int insertS1110000 = baseDao.execSql(sql, null);
+		return insertS1110000;
+	}
+	/**
+	 * 自动获得编码
+	 * @param DicCode
+	 * @return
+	 */
+	public String AutoGetCode(String DicCode) {
+		String sql = "select GetAutoCode('"+DicCode+"')";
+		String getCode = null;
+		List<Map<String, Object>> autoGetCode = baseDao.queryForList(sql, null);
+		for (Map<String, Object> map : autoGetCode) {
+			getCode = (String) map.get("GetAutoCode('"+DicCode+"')");
+			System.out.println("得到自动编码2：" + getCode);
+		}
+		return getCode;
+	}
 }

@@ -4,14 +4,18 @@ import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
+import javax.annotation.Resource;
+
+import com.yhzh.dao.ServerDao;
+
 public class Test {
 
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-		//获得当前系统时间，转化成mysql的date,存入数据库中
-			String str = "110000000002";
-			String str1 = str.substring(11);
-			System.out.println(str1);
+		String RTOAttrCatalogCode = "1110000000000081";
+		String RTOAttrCode = RTOAttrCatalogCode.substring(0, 15);
+		String DotCategory = RTOAttrCatalogCode.substring(15);
+		System.out.println(RTOAttrCode);
+		System.out.println(DotCategory);
 	}
 
 }

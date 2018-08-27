@@ -71,8 +71,17 @@
 	<bean id="BaseDao" class="com.yhzh.dao.BaseDao"></bean>
 	<!-- ServerDao -->
 	<bean id="ServerDao" class="com.yhzh.dao.ServerDao"></bean>
-	<!-- ServerBizImpl -->
-	<bean id="ServerBizImpl" class="com.yhzh.biz.ServerBizImpl"></bean>
+	<bean id="ServerUnitDao" class="com.yhzh.dao.ServerUnitDao"></bean>
+	<bean id="RTObjectDao" class="com.yhzh.dao.RTObjectDao"></bean>
+	<bean id="RTObjectAttrDao" class="com.yhzh.dao.RTObjectAttrDao"></bean>
+	<bean id="DataObjectDao" class="com.yhzh.dao.DataObjectDao"></bean>
+	
+	<!-- 实现类Impl -->
+	<bean id="ServerBizImpl" class="com.yhzh.biz.impl.ServerBizImpl"></bean>
+	<bean id="ServerUnitBizImpl" class="com.yhzh.biz.impl.ServerUnitBizImpl"></bean>
+	<bean id="RTObjectBizImpl" class="com.yhzh.biz.impl.RTObjectBizImpl"></bean>
+	<bean id="RTObjectAttrBizImpl" class="com.yhzh.biz.impl.RTObjectAttrBizImpl"></bean>
+	<bean id="DataObjectBizImpl" class="com.yhzh.biz.impl.DataObjectBizImpl"></bean>
 
 
 	<!-- 配置视图解析器 功能：解析真正的物理视图 解析方案：前缀+逻辑视图+后缀 组合成物理视图 /WEB-INF/jsps/hello.jsp -->

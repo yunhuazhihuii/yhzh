@@ -31,12 +31,14 @@ CREATE TABLE `YH_DEV_TYPE` (
 -- ----------------------------
 DROP TABLE IF EXISTS `YH_DEV_ATTR`;
 CREATE TABLE `YH_DEV_ATTR` (
-  `devAtrrId` varchar(16) NOT NULL COMMENT '属性编号',
+  `devAtrrId` varchar(16) NOT NULL COMMENT '属性编号(设备类型编号+3位编码)',
   `devtypeid` varchar(3) NOT NULL COMMENT '设备类型编号',
-  `attrName` varchar(50) NOT NULL COMMENT '属性名称',
+  `attrClass` varchar(60) DEFAULT NULL COMMENT '属性分类',
+  `attrEnName` varchar(50) DEFAULT NULL COMMENT '属性英文名称',
+  `attrCnName` varchar(50) NOT NULL COMMENT '属性中文名称',
   `attrUnit` varchar(20) DEFAULT NULL COMMENT '属性单位',
   `attrDict` varchar(60) DEFAULT NULL COMMENT '属性数据字典',
-  `isTabDisplay` varchar(1) NOT NULL COMMENT '是否在列表展示',
+  `tabOrder` Int DEFAULT NULL COMMENT '列表展示顺序',
   PRIMARY KEY (`devAtrrId`),
   INDEX(devtypeid)
 ) COMMENT='设备类型属性表';
@@ -49,7 +51,8 @@ DROP TABLE IF EXISTS `YH_DEV_INFO`;
 CREATE TABLE `YH_DEV_INFO` (
   `devId` varchar(16) NOT NULL COMMENT '设备编号',
   `devtypeid` varchar(3) NOT NULL COMMENT '设备类型编号',
-  `devName` varchar(255) DEFAULT NULL COMMENT '设备名称',
+  `devEnName` varchar(50) DEFAULT NULL COMMENT '设备英文名称',
+  `devCnName` varchar(255) DEFAULT NULL COMMENT '设备中文名称',
   `devModel` varchar(255) DEFAULT NULL COMMENT '设备型号',
   `floor` int  NOT NULL COMMENT '设备所在楼层',
   PRIMARY KEY (`devId`),
@@ -92,8 +95,9 @@ DROP TABLE IF EXISTS `YH_DICT`;
 CREATE TABLE `YH_DICT` (
   `dictname` varchar(60) NOT NULL COMMENT '字典名',
   `dictdesc` varchar(100) DEFAULT NULL COMMENT '字典描述',
-  `key` varchar(50) DEFAULT NULL COMMENT '字典key',
+  `mykey` varchar(50) DEFAULT NULL COMMENT '字典key',
   `val` varchar(255) DEFAULT NULL COMMENT '字典value',
-  UNIQUE INDEX IN_YH_DICT_1 (`dictname`,`key`)
+  `myOrder` varchar(255) DEFAULT NULL COMMENT '顺序',
+  UNIQUE INDEX IN_YH_DICT_1 (`dictname`,`mykey`)
 ) COMMENT='字典表';
 

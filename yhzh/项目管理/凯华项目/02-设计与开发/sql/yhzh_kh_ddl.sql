@@ -68,7 +68,7 @@ DROP TABLE IF EXISTS `YH_DEV_POINT_REF`;
 CREATE TABLE `YH_DEV_POINT_REF` (
   `adapterId` varchar(12) NOT NULL COMMENT '适配器编号',
   `controllerId` varchar(16) NOT NULL COMMENT '控制器编号',
-  `pointId` varchar(16) NOT NULL COMMENT '点编号',
+  `pointId` varchar(20) NOT NULL COMMENT '点编号',
   `devId` varchar(16) NOT NULL COMMENT '设备编号',
   `devAtrrId` varchar(16)  NOT NULL COMMENT '属性编号',
   PRIMARY KEY (`pointId`),

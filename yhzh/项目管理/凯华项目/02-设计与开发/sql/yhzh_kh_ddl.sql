@@ -1,4 +1,3 @@
-
 -- ----------------------------
 -- Table structure for `yh_user`用户表
 -- ----------------------------
@@ -18,6 +17,7 @@ CREATE TABLE `yh_user` (
 DROP TABLE IF EXISTS `YH_DEV_TYPE`;
 CREATE TABLE `YH_DEV_TYPE` (
   `devTypeId` varchar(3) NOT NULL COMMENT '设备类型编号',
+  `pareDevTypeId` varchar(3) DEFAULT NULL COMMENT '父设备编号',
   `devTypeName` varchar(100) NOT NULL COMMENT '设备类型名称',
   `isStoreHis` varchar(1) NOT NULL COMMENT '是否存储历史数据',
   `storeRate` int DEFAULT NULL COMMENT '数据存储频率(分钟)',
@@ -50,11 +50,13 @@ CREATE TABLE `YH_DEV_ATTR` (
 DROP TABLE IF EXISTS `YH_DEV_INFO`;
 CREATE TABLE `YH_DEV_INFO` (
   `devId` varchar(16) NOT NULL COMMENT '设备编号',
+  `pareDevId` varchar(16) DEFAULT NULL COMMENT '父设备编号',
   `devtypeid` varchar(3) NOT NULL COMMENT '设备类型编号',
   `devEnName` varchar(50) DEFAULT NULL COMMENT '设备英文名称',
   `devCnName` varchar(255) DEFAULT NULL COMMENT '设备中文名称',
   `devModel` varchar(255) DEFAULT NULL COMMENT '设备型号',
-  `floor` int  NOT NULL COMMENT '设备所在楼层',
+  `floor` varchar(16)  NOT NULL COMMENT '设备所在楼层',
+  `location` varchar(100) DEFAULT NULL COMMENT '设备位置',
   PRIMARY KEY (`devId`),
   INDEX(devtypeid)
 ) COMMENT='设备信息表';

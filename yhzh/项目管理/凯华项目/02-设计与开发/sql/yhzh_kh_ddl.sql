@@ -103,3 +103,202 @@ CREATE TABLE `YH_DICT` (
   UNIQUE INDEX IN_YH_DICT_1 (`dictname`,`mykey`)
 ) COMMENT='字典表';
 
+-- *******************************以下是适配器相关表****************************************
+-- ----------------------------
+-- 适配器配置表(yhzh_adapter)
+-- ----------------------------
+DROP TABLE IF EXISTS `yhzh_adapter`;
+CREATE TABLE `yhzh_adapter` (
+  `adapterId` varchar(12) NOT NULL COMMENT '适配器编号',
+  `adapterName` varchar(50) NOT NULL COMMENT '适配器名称',
+  `server` varchar(50) DEFAULT NULL COMMENT '适配器所在服务器',
+  `adapterIP` varchar(64) DEFAULT NULL COMMENT '适配器IP',
+  PRIMARY KEY (`adapterId`)
+) COMMENT='适配器配置表';
+
+-- ----------------------------
+-- 控制器配置表(yhzh_controller)
+-- ----------------------------
+DROP TABLE IF EXISTS `yhzh_controller`;
+CREATE TABLE `yhzh_controller` (
+  `controllerid` varchar(16) NOT NULL COMMENT '控制器编号',
+  `adapterId` varchar(12) NOT NULL COMMENT '适配器编号',
+  `controllername` varchar(60) DEFAULT NULL COMMENT '控制器名称',
+  `deviceid` varchar(16) DEFAULT NULL COMMENT '控制器物理编号',
+  `IP` varchar(64) DEFAULT NULL COMMENT '控制器IP',
+  `mac` varchar(64) DEFAULT NULL COMMENT '控制器物理地址',
+  `contype` varchar(3) DEFAULT NULL COMMENT '控制器类型（1智能照明2bacnet）',
+  PRIMARY KEY (`controllerid`)
+) COMMENT='控制器配置表';
+
+-- ----------------------------
+-- 点配置表(yhzh_point)
+-- ----------------------------
+DROP TABLE IF EXISTS `yhzh_point`;
+CREATE TABLE `yhzh_point` (
+  `pointid` varchar(20) NOT NULL COMMENT '点编号',
+  `phisid` varchar(20) DEFAULT NULL COMMENT '点物理编号',
+  `controllerid` varchar(16) NOT NULL COMMENT '控制器编号',
+  `pointname` varchar(60) DEFAULT NULL COMMENT '点名称',
+  `objectName` varchar(30) DEFAULT NULL COMMENT '点物理名称(物理)',
+  `describe` varchar(100) DEFAULT NULL COMMENT '点属性描述(如滤网报警)',
+  `ioproperty` varchar(2) DEFAULT NULL COMMENT '点输入输出属性（1数据量输入2数据量输出3通用模拟量4模拟量输入5模拟量输出6通用数据量）',
+  `pointtype` varchar(8) DEFAULT NULL COMMENT '点类型(1回路2组3区域4空调)',
+  `instanceNumber` varchar(16) DEFAULT NULL COMMENT '点实例号(物理)',
+  `issubs` varchar(3) DEFAULT NULL COMMENT '是否订阅(1是0否)',
+  `increment` decimal DEFAULT NULL COMMENT '订阅变化范围(对模拟量点)',
+  `saveWhenChg` varchar(3) DEFAULT NULL COMMENT '值变化是否登记历史数据(1是0否)',
+  `pointvalue` varchar(20) DEFAULT NULL COMMENT '点值',
+  PRIMARY KEY (`pointid`),
+  INDEX(controllerid)
+) COMMENT='点配置表';
+
+-- ----------------------------
+-- 历史数据表1(7-53楼空调柜机)(yh_point_val_his1)
+-- ----------------------------
+DROP TABLE IF EXISTS `yh_point_val_his1`;
+CREATE TABLE `yh_point_val_his1` (
+  `pointid` varchar(16) NOT NULL COMMENT '点编号',
+  `recDate` varchar(16) DEFAULT NULL COMMENT '日期(yyyy-mm-dd格式)',
+  `recTime` varchar(16) DEFAULT NULL COMMENT '时间(hh24:min格式)',
+  `recReason` varchar(3) DEFAULT NULL COMMENT '登记缘由(1正常间隔;2状态变化)',
+  `RecRealTime` varchar(30) DEFAULT NULL COMMENT '登记时间(yyyy-mm-dd HH24:mi:ss)',
+  `pointvalue` varchar(20) NOT NULL COMMENT '点值',
+  INDEX(pointid),
+  INDEX(recDate,recTime)
+) COMMENT='历史数据表1(7-53楼空调柜机)';
+
+-- ----------------------------
+-- 历史数据表2((新风机)(yh_point_val_his2)
+-- ----------------------------
+DROP TABLE IF EXISTS `yh_point_val_his2`;
+CREATE TABLE `yh_point_val_his2` (
+  `pointid` varchar(16) NOT NULL COMMENT '点编号',
+  `recDate` varchar(16) DEFAULT NULL COMMENT '日期(yyyy-mm-dd格式)',
+  `recTime` varchar(16) DEFAULT NULL COMMENT '时间(hh24:min格式)',
+  `recReason` varchar(3) DEFAULT NULL COMMENT '登记缘由(1正常间隔;2状态变化)',
+  `RecRealTime` varchar(30) DEFAULT NULL COMMENT '登记时间(yyyy-mm-dd HH24:mi:ss)',
+  `pointvalue` varchar(20) NOT NULL COMMENT '点值',
+  INDEX(pointid),
+  INDEX(recDate,recTime)
+) COMMENT='历史数据表2((新风机)';
+
+-- ----------------------------
+-- 历史数据表3(33楼大堂)(yh_point_val_his3)
+-- ----------------------------
+DROP TABLE IF EXISTS `yh_point_val_his3`;
+CREATE TABLE `yh_point_val_his3` (
+  `pointid` varchar(16) NOT NULL COMMENT '点编号',
+  `recDate` varchar(16) DEFAULT NULL COMMENT '日期(yyyy-mm-dd格式)',
+  `recTime` varchar(16) DEFAULT NULL COMMENT '时间(hh24:min格式)',
+  `recReason` varchar(3) DEFAULT NULL COMMENT '登记缘由(1正常间隔;2状态变化)',
+  `RecRealTime` varchar(30) DEFAULT NULL COMMENT '登记时间(yyyy-mm-dd HH24:mi:ss)',
+  `pointvalue` varchar(20) NOT NULL COMMENT '点值',
+  INDEX(pointid),
+  INDEX(recDate,recTime)
+) COMMENT='历史数据表3(33楼大堂)';
+
+-- ----------------------------
+-- 历史数据表4(南北大堂)(yh_point_val_his4)
+-- ----------------------------
+DROP TABLE IF EXISTS `yh_point_val_his4`;
+CREATE TABLE `yh_point_val_his4` (
+  `pointid` varchar(16) NOT NULL COMMENT '点编号',
+  `recDate` varchar(16) DEFAULT NULL COMMENT '日期(yyyy-mm-dd格式)',
+  `recTime` varchar(16) DEFAULT NULL COMMENT '时间(hh24:min格式)',
+  `recReason` varchar(3) DEFAULT NULL COMMENT '登记缘由(1正常间隔;2状态变化)',
+  `RecRealTime` varchar(30) DEFAULT NULL COMMENT '登记时间(yyyy-mm-dd HH24:mi:ss)',
+  `pointvalue` varchar(20) NOT NULL COMMENT '点值',
+  INDEX(pointid),
+  INDEX(recDate,recTime)
+) COMMENT='历史数据表4(南北大堂)';
+
+-- ----------------------------
+-- 历史数据表5(送排风)(yh_point_val_his5)
+-- ----------------------------
+DROP TABLE IF EXISTS `yh_point_val_his5`;
+CREATE TABLE `yh_point_val_his5` (
+  `pointid` varchar(16) NOT NULL COMMENT '点编号',
+  `recDate` varchar(16) DEFAULT NULL COMMENT '日期(yyyy-mm-dd格式)',
+  `recTime` varchar(16) DEFAULT NULL COMMENT '时间(hh24:min格式)',
+  `recReason` varchar(3) DEFAULT NULL COMMENT '登记缘由(1正常间隔;2状态变化)',
+  `RecRealTime` varchar(30) DEFAULT NULL COMMENT '登记时间(yyyy-mm-dd HH24:mi:ss)',
+  `pointvalue` varchar(20) NOT NULL COMMENT '点值',
+  INDEX(pointid),
+  INDEX(recDate,recTime)
+) COMMENT='历史数据表5(送排风)';
+
+-- ----------------------------
+-- 历史数据表6(照明)(yh_point_val_his6)
+-- ----------------------------
+DROP TABLE IF EXISTS `yh_point_val_his6`;
+CREATE TABLE `yh_point_val_his6` (
+  `pointid` varchar(16) NOT NULL COMMENT '点编号',
+  `recDate` varchar(16) DEFAULT NULL COMMENT '日期(yyyy-mm-dd格式)',
+  `recTime` varchar(16) DEFAULT NULL COMMENT '时间(hh24:min格式)',
+  `recReason` varchar(3) DEFAULT NULL COMMENT '登记缘由(1正常间隔;2状态变化)',
+  `RecRealTime` varchar(30) DEFAULT NULL COMMENT '登记时间(yyyy-mm-dd HH24:mi:ss)',
+  `pointvalue` varchar(20) NOT NULL COMMENT '点值',
+  INDEX(pointid),
+  INDEX(recDate,recTime)
+) COMMENT='历史数据表6(照明)';
+
+-- ----------------------------
+-- 历史数据表7(负一楼供冷)(yh_point_val_his7)
+-- ----------------------------
+DROP TABLE IF EXISTS `yh_point_val_his7`;
+CREATE TABLE `yh_point_val_his7` (
+  `pointid` varchar(16) NOT NULL COMMENT '点编号',
+  `recDate` varchar(16) DEFAULT NULL COMMENT '日期(yyyy-mm-dd格式)',
+  `recTime` varchar(16) DEFAULT NULL COMMENT '时间(hh24:min格式)',
+  `recReason` varchar(3) DEFAULT NULL COMMENT '登记缘由(1正常间隔;2状态变化)',
+  `RecRealTime` varchar(30) DEFAULT NULL COMMENT '登记时间(yyyy-mm-dd HH24:mi:ss)',
+  `pointvalue` varchar(20) NOT NULL COMMENT '点值',
+  INDEX(pointid),
+  INDEX(recDate,recTime)
+) COMMENT='历史数据表7(负一楼供冷)';
+
+-- ----------------------------
+-- 历史数据表8(37层板换)(yh_point_val_his8)
+-- ----------------------------
+DROP TABLE IF EXISTS `yh_point_val_his8`;
+CREATE TABLE `yh_point_val_his8` (
+  `pointid` varchar(16) NOT NULL COMMENT '点编号',
+  `recDate` varchar(16) DEFAULT NULL COMMENT '日期(yyyy-mm-dd格式)',
+  `recTime` varchar(16) DEFAULT NULL COMMENT '时间(hh24:min格式)',
+  `recReason` varchar(3) DEFAULT NULL COMMENT '登记缘由(1正常间隔;2状态变化)',
+  `RecRealTime` varchar(30) DEFAULT NULL COMMENT '登记时间(yyyy-mm-dd HH24:mi:ss)',
+  `pointvalue` varchar(20) NOT NULL COMMENT '点值',
+  INDEX(pointid),
+  INDEX(recDate,recTime)
+) COMMENT='历史数据表8(37层板换)';
+
+-- ----------------------------
+-- 历史数据表9(热水、盘管、电加热、插座)(yh_point_val_his9)
+-- ----------------------------
+DROP TABLE IF EXISTS `yh_point_val_his9`;
+CREATE TABLE `yh_point_val_his9` (
+  `pointid` varchar(16) NOT NULL COMMENT '点编号',
+  `recDate` varchar(16) DEFAULT NULL COMMENT '日期(yyyy-mm-dd格式)',
+  `recTime` varchar(16) DEFAULT NULL COMMENT '时间(hh24:min格式)',
+  `recReason` varchar(3) DEFAULT NULL COMMENT '登记缘由(1正常间隔;2状态变化)',
+  `RecRealTime` varchar(30) DEFAULT NULL COMMENT '登记时间(yyyy-mm-dd HH24:mi:ss)',
+  `pointvalue` varchar(20) NOT NULL COMMENT '点值',
+  INDEX(pointid),
+  INDEX(recDate,recTime)
+) COMMENT='历史数据表9(热水、盘管、电加热、插座)';
+
+-- ----------------------------
+-- 历史数据表18(漏水报警)(yh_point_val_his18)
+-- ----------------------------
+DROP TABLE IF EXISTS `yh_point_val_his18`;
+CREATE TABLE `yh_point_val_his18` (
+  `pointid` varchar(16) NOT NULL COMMENT '点编号',
+  `recDate` varchar(16) DEFAULT NULL COMMENT '日期(yyyy-mm-dd格式)',
+  `recTime` varchar(16) DEFAULT NULL COMMENT '时间(hh24:min格式)',
+  `recReason` varchar(3) DEFAULT NULL COMMENT '登记缘由(1正常间隔;2状态变化)',
+  `RecRealTime` varchar(30) DEFAULT NULL COMMENT '登记时间(yyyy-mm-dd HH24:mi:ss)',
+  `pointvalue` varchar(20) NOT NULL COMMENT '点值',
+  INDEX(pointid),
+  INDEX(recDate,recTime)
+) COMMENT='历史数据表18(漏水报警)';

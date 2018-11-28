@@ -68,7 +68,7 @@
                       
                     </el-submenu>
 
-                    <el-submenu index="3">
+                    <!-- <el-submenu index="3">
                     
                         <template slot="title">
                           <span>给排水系统</span>
@@ -85,9 +85,9 @@
 
                         
                         
-                    </el-submenu>
+                    </el-submenu> -->
 
-                    <el-submenu index="4">
+                    <el-submenu index="3">
                     
                         <template slot="title">
                           <span>照明系统</span>
@@ -108,7 +108,7 @@
                     </el-submenu>
 
 
-                    <el-submenu index="5">
+                    <el-submenu index="4">
                     
                         <template slot="title">
                           <span>负1层供冷系统</span>
@@ -129,7 +129,7 @@
                     </el-submenu>
 
 
-                    <el-submenu index="6">
+                    <el-submenu index="5">
                     
                         <template slot="title">
                           <span>37层板换系统</span>
@@ -148,7 +148,7 @@
                     </el-submenu>
 
 
-                    <el-submenu index="7">
+                    <el-submenu index="6">
                     
                         <template slot="title">
                           <span>其它</span>

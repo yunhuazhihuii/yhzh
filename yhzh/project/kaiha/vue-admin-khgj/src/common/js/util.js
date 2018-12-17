@@ -9,6 +9,10 @@ function padding(s, len) {
 export default {
     formatDate: {
 
+        /**获取格式化日期
+         * @param date 日期 需要传递，可以传new Date()
+         * @param  pattern 若要获取yyyy-MM-dd格式的日期，可以不传； 若要获取日期时间，可传yyyyMMddhhmmss，返回20180925234353
+         */
         format: function (date, pattern) {
             pattern = pattern || DEFAULT_PATTERN;
             return pattern.replace(SIGN_REGEXP, function ($0) {
@@ -45,7 +49,26 @@ export default {
             return null;
         }
 
-    }
+    },
+
+    /**
+     * 去掉字符串前后空格 chenms 2018-9-19
+     */
+    trim: function(str){ 
+      return str.replace(/(^\s*)|(\s*$)/g, ""); 
+    },
+    /**
+     * 判断字符串是否为空  chenms 2018-9-15
+     * @param str string 传入的字符串
+     * @retrun Boolean 为空则true，否则false
+     * */
+    isNull: function(str){
+        var rst = false;
+        if (str == null || str == undefined || str == '' || str.length <= 0){
+            rst = true;
+        }
+        return rst;
+    },
 
 };
 /**

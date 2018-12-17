@@ -1,0 +1,6 @@
+1.除了生成 node_module模块【npm install命令(或者cnpm install)】，
+还要安装async ：【用于事务处理方法】
+npm install async 
+//或者
+npm install -g async 
+2.

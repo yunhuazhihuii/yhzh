@@ -17,7 +17,7 @@
 </template>
 
 <script>
-  import { userLoginInfo } from '../service/getData';
+  //import { userLoginInfo } from '../service/getData';
   import {setSession} from '../common/js/util'
   export default {
     data() {
@@ -45,8 +45,10 @@
           if (valid) {
             _this.logining = true;
             var loginUser = { username: _this.ruleForm2.account, password: _this.ruleForm2.checkPass };
+
+             _this.$router.push({ path: '/home' });
             // 存储登录session
-              userLoginInfo(loginUser,res=>{
+              /*userLoginInfo(loginUser,res=>{
                   if(res.data.length>0){
                     // 用户信息
                     setSession('UserInfo',res.data[0]);
@@ -57,7 +59,7 @@
                     _this.logining=false
                     _this.$message.error('用户名或密码错误');
                   }
-              })
+              })*/
               // 本地保存用户名
               // _this.$store.commit('sessionName', _this.ruleForm2.account);
           } 

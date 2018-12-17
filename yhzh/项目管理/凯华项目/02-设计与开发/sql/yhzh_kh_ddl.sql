@@ -38,6 +38,7 @@ CREATE TABLE `YH_DEV_ATTR` (
   `attrCnName` varchar(50) NOT NULL COMMENT '属性中文名称',
   `attrUnit` varchar(20) DEFAULT NULL COMMENT '属性单位',
   `attrDict` varchar(60) DEFAULT NULL COMMENT '属性数据字典',
+  `attrWidth` varchar(10) DEFAULT NULL COMMENT '列表宽度',
   `tabOrder` Int DEFAULT NULL COMMENT '列表展示顺序',
   PRIMARY KEY (`devAtrrId`),
   INDEX(devtypeid)

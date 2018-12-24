@@ -8,7 +8,7 @@
   // 获取设备属性列表
   router.post('/get_dev_attr', function (req, res) {
     //console.log(req.body.devtypeid); ifnull(t.attrWidth,'80')
-    nodeApi.query("select t.devAtrrId,t.attrClass,t.attrEnName,t.attrCnName,t.attrUnit,t.attrDict," +
+    nodeApi.query("select t.devAttrId,t.attrClass,t.attrEnName,t.attrCnName,t.attrUnit,t.attrDict," +
         "t.attrWidth, t.tabOrder " +
         " from YH_DEV_ATTR t where  t.devtypeid=? order by t.tabOrder",
       [req.body.devtypeid],
@@ -47,21 +47,22 @@
     //查询设备信息
     /*"select t.devId,t.devEnName,t.devCnName,floor,location from YH_DEV_INFO t " +
         " where t.devtypeid=? and t.floor>=? and t.floor<=? order by t.floor;" +
-        "select concat_ws('.',t.adapterId,t.controllerId,t.pointId) pointId,t.devId,t.devAtrrId " +
+        "select concat_ws('.',t.adapterId,t.controllerId,t.pointId) pointId,t.devId,t.devAttrId " +
         " from YH_DEV_POINT_REF t left join YH_DEV_INFO t2 on t.devId=t2.devId " +
         " where t2.devtypeid=? and t2.floor>=? and t2.floor<=?"*/
+    //floor+0的目的是为了转成数字去比较，要不字符比较会有问题的
     nodeApi.query("select t.devId,t.devEnName,t.devCnName,floor,location from YH_DEV_INFO t " +
-        " where t.devtypeid=? and t.floor>=? and t.floor<=? order by t.floor",
+        " where t.devtypeid=? and t.floor+0>=? and t.floor+0<=? order by t.floor", 
       [req.body.devtypeid,req.body.floor1,req.body.floor2],
       function (devInfoData) {
 
         /*for(var i = 0;i < devInfoData.length;i++){
-          nodeApi.query("select concat_ws('.',t.adapterId,t.controllerId,t.pointId) pointId,t.devId,t.devAtrrId " +
+          nodeApi.query("select concat_ws('.',t.adapterId,t.controllerId,t.pointId) pointId,t.devId,t.devAttrId " +
             " from YH_DEV_POINT_REF t where t.devId=?",
             [devInfoData[i].devId],
             function (pointData){
               for(point in pointData){
-                devInfoData[i][point.devAtrrId] = {pointId: point.pointId,value:"测试" + point.pointId};
+                devInfoData[i][point.devAttrId] = {pointId: point.pointId,value:"测试" + point.pointId};
               }
             });
         }
@@ -76,14 +77,14 @@
           res.send({code: 1,data: devInfoData});
         }else{
           async.each(devInfoData,function(item,callback){
-                nodeApi.query("select concat_ws('.',t.adapterId,t.controllerId,t.pointId) pointId,t.devId,t.devAtrrId " +
+                nodeApi.query("select concat_ws('.',t.adapterId,t.controllerId,t.pointId) pointId,t.devId,t.devAttrId " +
                   " from YH_DEV_POINT_REF t where t.devId=?",
                   [item.devId],
                   function (pointData){
                     i++;
                     for(var j = 0;j < pointData.length;j++){
                       var point = pointData[j];
-                      item[point.devAtrrId] = {pointId: point.pointId,value:"0"};//value:"测试" + point.pointId
+                      item[point.devAttrId] = {pointId: point.pointId,value:"0"};//value:"测试" + point.pointId
                     }
                     //callback(null);
                     if(i == devLength){
@@ -111,7 +112,7 @@
     var finish2 = false;//表格2数据已经完全构造完了
     //查询设备信息表，表格1数据
     nodeApi.query("select t.devId,t.devEnName,t.devCnName,floor,location from YH_DEV_INFO t " +
-        " where t.devtypeid=? and t.floor>=? and t.floor<=? order by t.floor,t.devEnName limit 0, ?",
+        " where t.devtypeid=? and t.floor+0>=? and t.floor+0<=? order by t.floor,t.devEnName limit 0, ?",
       [devtypeid,floor1,floor2,pageCount],
       function (devInfoData1) {
         devPointData1 = devInfoData1;
@@ -125,13 +126,13 @@
           res.send({code: 1,data: devPointData1});
         }else{
           async.each(devPointData1,function(item,callback){
-                nodeApi.query("select concat_ws('.',t.adapterId,t.controllerId,t.pointId) pointId,t.devId,t.devAtrrId " +
+                nodeApi.query("select concat_ws('.',t.adapterId,t.controllerId,t.pointId) pointId,t.devId,t.devAttrId " +
                   " from YH_DEV_POINT_REF t where t.devId=?",
                   [item.devId],
                   function (pointData){
                     for(var j = 0;j < pointData.length;j++){
                       var point = pointData[j];
-                      item[point.devAtrrId] = {pointId: point.pointId,value:"0"};//value:"测试" + point.pointId
+                      item[point.devAttrId] = {pointId: point.pointId,value:"0"};//value:"测试" + point.pointId
                     }
                     i++;
                     if(i == devLength){//说明设备列表循环结束了
@@ -146,7 +147,7 @@
           });
           //查询设备信息表，表格2数据
           nodeApi.query("select t.devId,t.devEnName,t.devCnName,floor,location from YH_DEV_INFO t " +
-              " where t.devtypeid=? and t.floor>=? and t.floor<=? order by t.floor,t.devEnName limit ?,?",
+              " where t.devtypeid=? and t.floor+0>=? and t.floor+0<=? order by t.floor,t.devEnName limit ?,?",
             [devtypeid,floor1,floor2,pageCount,pageCount],
             function (devInfoData2) {
               devPointData2 = devInfoData2;
@@ -163,13 +164,13 @@
                 }
               }else{
                 async.each(devPointData2,function(item,callback){
-                      nodeApi.query("select concat_ws('.',t.adapterId,t.controllerId,t.pointId) pointId,t.devId,t.devAtrrId " +
+                      nodeApi.query("select concat_ws('.',t.adapterId,t.controllerId,t.pointId) pointId,t.devId,t.devAttrId " +
                         " from YH_DEV_POINT_REF t where t.devId=?",
                         [item.devId],
                         function (pointData2){
                           for(var j = 0;j < pointData2.length;j++){
                             var point = pointData2[j];
-                            item[point.devAtrrId] = {pointId: point.pointId,value:"0"};//value:"测试" + point.pointId
+                            item[point.devAttrId] = {pointId: point.pointId,value:"0"};//value:"测试" + point.pointId
                           }
                           i2++;
                           if(i2 == devLength2){//说明设备列表循环结束了
@@ -197,7 +198,7 @@
     var recTime = req.body.recTime;
     //查询设备列表信息
     nodeApi.query("select t.devId,t.devEnName,t.devCnName,floor,location from YH_DEV_INFO t " +
-        " where t.devtypeid=? and t.floor>=? and t.floor<=? order by t.floor",
+        " where t.devtypeid=? and t.floor+0>=? and t.floor+0<=? order by t.floor",
       [devtypeid,floor1,floor2],
       function (devInfoData) {
         var i = 0;
@@ -220,7 +221,7 @@
               //每个设备循环去查历史表
               async.each(devInfoData,function(item,callback){
                 //查询历史表
-                nodeApi.query("select t2.devId,t2.devAtrrId,t.pointvalue from yh_point_val_his" + hisIndex + " t " +
+                nodeApi.query("select t2.devId,t2.devAttrId,t.pointvalue from yh_point_val_his" + hisIndex + " t " +
                   " left join YH_DEV_POINT_REF t2 on t.pointId=t2.pointId where t2.devId=? " +
                   " and t.recReason='1' and t.recDate=? and t.recTime=?",
                   [item.devId,recDate,recTime],
@@ -228,7 +229,7 @@
                     i++;
                     for(var j = 0;j < pHisData.length;j++){
                       var pointVal = pHisData[j];
-                      item[pointVal.devAtrrId] = pointVal.pointvalue;
+                      item[pointVal.devAttrId] = pointVal.pointvalue;
                     }
                     if(i == devLength){
                       res.send({code: 1,data: devInfoData});
@@ -252,7 +253,7 @@
     var recTime = req.body.recTime;
     //查询设备列表信息
     nodeApi.query("select t.devId,t.devEnName,t.devCnName,floor,location from YH_DEV_INFO t " +
-        " where t.devtypeid=? and t.floor>=? and t.floor<=? order by t.floor,t.devEnName limit 0, ?",
+        " where t.devtypeid=? and t.floor+0>=? and t.floor+0<=? order by t.floor,t.devEnName limit 0, ?",
       [devtypeid,floor1,floor2],
       function (devInfoData) {
         var i = 0;
@@ -275,7 +276,7 @@
               //每个设备循环去查历史表
               async.each(devInfoData,function(item,callback){
                 //查询历史表
-                nodeApi.query("select t2.devId,t2.devAtrrId,t.pointvalue from yh_point_val_his" + hisIndex + " t " +
+                nodeApi.query("select t2.devId,t2.devAttrId,t.pointvalue from yh_point_val_his" + hisIndex + " t " +
                   " left join YH_DEV_POINT_REF t2 on t.pointId=t2.pointId where t2.devId=? " +
                   " and t.recReason='1' and t.recDate=? and t.recTime=?",
                   [item.devId,recDate,recTime],
@@ -283,7 +284,7 @@
                     i++;
                     for(var j = 0;j < pHisData.length;j++){
                       var pointVal = pHisData[j];
-                      item[pointVal.devAtrrId] = pointVal.pointvalue;
+                      item[pointVal.devAttrId] = pointVal.pointvalue;
                     }
                     if(i == devLength){
                       res.send({code: 1,data: devInfoData});

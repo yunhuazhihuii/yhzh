@@ -14,8 +14,8 @@ export default{
   components:{devtab},
   data(){
     return {  
-       devtypeid: 1, //设备属性编号
-       floorScopeList: [{floor1: "1",floor2: "17"},
+       devtypeid: 101, //设备属性编号
+       floorScopeList: [{floor1: "7",floor2: "17"},
                         {floor1: "18",floor2: "29"},
                         {floor1: "30",floor2: "41"},
                         {floor1: "42",floor2: "53"}], //楼层范围

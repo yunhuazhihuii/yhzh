@@ -15,7 +15,7 @@ export default{
   components:{devdtab},
   data(){
     return {  
-       devtypeid: 6, //设备属性编号
+       devtypeid: 112, //设备属性编号
        floorScopeList: [{floor1: "-4",floor2: "-4"},
                         {floor1: "-3",floor2: "-3"},
                         {floor1: "-2",floor2: "-2"},

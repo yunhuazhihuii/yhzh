@@ -19,14 +19,14 @@
 			<el-table-column prop="devEnName" label="设备编号" :show-overflow-tooltip="true">
 			</el-table-column>
 			<template v-for='(col) in devAttrData'>
-				<el-table-column :show-overflow-tooltip="true" :prop="col.devAtrrId" :label="col.attrCnName"
+				<el-table-column :show-overflow-tooltip="true" :prop="col.devAttrId" :label="col.attrCnName"
 				:width="getColStyle(col.attrWidth)">
 					<template scope="scope">
 						<!-- 属性数据字典不为空，则将值转为对应字典值显示 -->
 						<span style="color: red" v-if="col.attrDict != ''">
-							{{col.dictData[scope.row[col.devAtrrId].value]}}
+							{{col.dictData[scope.row[col.devAttrId].value]}}
 						</span>
-						<span style="color: red" v-else>{{scope.row[col.devAtrrId].value}}</span>
+						<span style="color: red" v-else>{{scope.row[col.devAttrId].value}}</span>
 						<!-- 单位不为空则显示单位 -->
 						<span v-if="col.attrUnit != ''">{{col.attrUnit}}</span>
 					</template>	

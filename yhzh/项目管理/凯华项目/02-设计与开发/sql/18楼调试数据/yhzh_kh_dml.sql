@@ -1,5 +1,5 @@
-﻿delete from YH_DEV_TYPE ;
-INSERT INTO YH_DEV_TYPE(devTypeId,pareDevTypeId,devTypeName,isStoreHis,storeRate,storeDays) values ('101','','办公楼层空调柜机1','1','60','60');
+﻿delete from YH_DEV_TYPE;
+INSERT INTO YH_DEV_TYPE(devTypeId,pareDevTypeId,devTypeName,isStoreHis,storeRate,storeDays) values ('101','','办公楼层空调柜机','1','60','60');
 INSERT INTO YH_DEV_TYPE(devTypeId,pareDevTypeId,devTypeName,isStoreHis,storeRate,storeDays) values ('102','','群楼层空调','1','60','60');
 INSERT INTO YH_DEV_TYPE(devTypeId,pareDevTypeId,devTypeName,isStoreHis,storeRate,storeDays) values ('103','','地下室空调','1','60','60');
 INSERT INTO YH_DEV_TYPE(devTypeId,pareDevTypeId,devTypeName,isStoreHis,storeRate,storeDays) values ('104','','33楼大堂空调','1','60','60');
@@ -22,9 +22,10 @@ INSERT INTO YH_DEV_TYPE(devTypeId,pareDevTypeId,devTypeName,isStoreHis,storeRate
 INSERT INTO YH_DEV_TYPE(devTypeId,pareDevTypeId,devTypeName,isStoreHis,storeRate,storeDays) values ('121','108','37层板换系统冷冻泵进出','1','60','60');
 INSERT INTO YH_DEV_TYPE(devTypeId,pareDevTypeId,devTypeName,isStoreHis,storeRate,storeDays) values ('122','108','37层板换系统蝶阀','1','60','60');
 INSERT INTO YH_DEV_TYPE(devTypeId,pareDevTypeId,devTypeName,isStoreHis,storeRate,storeDays) values ('123','108','37层板换系统冷冻泵','1','60','60');
-INSERT INTO YH_DEV_TYPE(devTypeId,pareDevTypeId,devTypeName,isStoreHis,storeRate,storeDays) values ('124','','漏水报警','1','60','60');
+INSERT INTO YH_DEV_TYPE(devTypeId,pareDevTypeId,devTypeName,isStoreHis,storeRate,storeDays) values ('124','','溢水报警','1','60','60');
 INSERT INTO YH_DEV_TYPE(devTypeId,pareDevTypeId,devTypeName,isStoreHis,storeRate,storeDays) values ('125','','应急照明','1','60','60');
 INSERT INTO YH_DEV_TYPE(devTypeId,pareDevTypeId,devTypeName,isStoreHis,storeRate,storeDays) values ('126','','天面','1','60','60');
+
 
 
 delete from YH_DEV_ATTR;
@@ -222,19 +223,19 @@ INSERT INTO YH_DEV_ATTR(devAttrId,devtypeid,attrClass,attrEnName,attrCnName,attr
 
 
 delete from YH_DEV_INFO;
-INSERT INTO YH_DEV_INFO(devId,pareDevId,devtypeid,devEnName,devCnName,devModel,floor,location) values ('1010180001','','101','','一号空调','AHU','18','');
-INSERT INTO YH_DEV_INFO(devId,pareDevId,devtypeid,devEnName,devCnName,devModel,floor,location) values ('1010180002','','101','','二号空调','AHU','18','');
-INSERT INTO YH_DEV_INFO(devId,pareDevId,devtypeid,devEnName,devCnName,devModel,floor,location) values ('1100180001','','110','','1号送排机','','18','卫生间');
-INSERT INTO YH_DEV_INFO(devId,pareDevId,devtypeid,devEnName,devCnName,devModel,floor,location) values ('1100180002','','110','','2号排风机','','18','卫生间');
+INSERT INTO YH_DEV_INFO(devId,pareDevId,devtypeid,devEnName,devCnName,devModel,floor,location) values ('1010180001','','101','AHU-18F-01','一号空调','AHU','18','');
+INSERT INTO YH_DEV_INFO(devId,pareDevId,devtypeid,devEnName,devCnName,devModel,floor,location) values ('1010180002','','101','AHU-18F-02','二号空调','AHU','18','');
+INSERT INTO YH_DEV_INFO(devId,pareDevId,devtypeid,devEnName,devCnName,devModel,floor,location) values ('1100180001','','110','EAF-18F-01','1号送排机','','18','卫生间');
+INSERT INTO YH_DEV_INFO(devId,pareDevId,devtypeid,devEnName,devCnName,devModel,floor,location) values ('1100180002','','110','EAF-18F-02','2号排风机','','18','卫生间');
 INSERT INTO YH_DEV_INFO(devId,pareDevId,devtypeid,devEnName,devCnName,devModel,floor,location) values ('1120180001','','112','18-NL2-1','走廊照明','','18','');
 INSERT INTO YH_DEV_INFO(devId,pareDevId,devtypeid,devEnName,devCnName,devModel,floor,location) values ('1120180002','','112','18-NL2-2','值班照明','','18','');
 INSERT INTO YH_DEV_INFO(devId,pareDevId,devtypeid,devEnName,devCnName,devModel,floor,location) values ('1120180003','','112','18-NL2-3','卫生间照明','','18','');
 INSERT INTO YH_DEV_INFO(devId,pareDevId,devtypeid,devEnName,devCnName,devModel,floor,location) values ('1120180004','','112','18-NL2-4','茶水/清洁间照明','','18','');
 INSERT INTO YH_DEV_INFO(devId,pareDevId,devtypeid,devEnName,devCnName,devModel,floor,location) values ('1120180005','','112','18-DDYQ1-1','电梯厅灯带','','18','');
 INSERT INTO YH_DEV_INFO(devId,pareDevId,devtypeid,devEnName,devCnName,devModel,floor,location) values ('1120180006','','112','18-DDYQ1-2','卫生间灯带','','18','');
-INSERT INTO YH_DEV_INFO(devId,pareDevId,devtypeid,devEnName,devCnName,devModel,floor,location) values ('1150180001','','115','','风机盘管','','18','');
-INSERT INTO YH_DEV_INFO(devId,pareDevId,devtypeid,devEnName,devCnName,devModel,floor,location) values ('1150180002','','115','','VAV电加热电源','','18','');
-INSERT INTO YH_DEV_INFO(devId,pareDevId,devtypeid,devEnName,devCnName,devModel,floor,location) values ('1150180003','','115','','茶/卫热水装置','','18','');
+INSERT INTO YH_DEV_INFO(devId,pareDevId,devtypeid,devEnName,devCnName,devModel,floor,location) values ('1150180001','','115','18-NR1-5','风机盘管','','18','');
+INSERT INTO YH_DEV_INFO(devId,pareDevId,devtypeid,devEnName,devCnName,devModel,floor,location) values ('1150180002','','115','18-DR1-1','VAV电加热电源','','18','');
+INSERT INTO YH_DEV_INFO(devId,pareDevId,devtypeid,devEnName,devCnName,devModel,floor,location) values ('1150180003','','115','18-NR1-3','茶/卫热水装置','','18','');
 INSERT INTO YH_DEV_INFO(devId,pareDevId,devtypeid,devEnName,devCnName,devModel,floor,location) values ('1240180001','','124','','消防电梯厅1','','18','消防电梯厅');
 INSERT INTO YH_DEV_INFO(devId,pareDevId,devtypeid,devEnName,devCnName,devModel,floor,location) values ('1240180002','','124','','消防电梯厅2','','18','消防电梯厅');
 INSERT INTO YH_DEV_INFO(devId,pareDevId,devtypeid,devEnName,devCnName,devModel,floor,location) values ('1240180003','','124','','水管井1','','18','水管井');
@@ -342,3 +343,13 @@ INSERT INTO YH_DEV_POINT_REF(adapterId,controllerId,pointId,devId,devAttrId) val
 INSERT INTO YH_DEV_POINT_REF(adapterId,controllerId,pointId,devId,devAttrId) values ('a001','172169567126','1721695671261629','1240180004','124004');
 INSERT INTO YH_DEV_POINT_REF(adapterId,controllerId,pointId,devId,devAttrId) values ('a001','172169567126','1721695671261632','1240180005','124005');
 
+
+delete from YH_DICT;
+INSERT INTO YH_DICT(dictname,dictdesc,mykey,val,myOrder) values ('running_state','运行状态','1','运行','');
+INSERT INTO YH_DICT(dictname,dictdesc,mykey,val,myOrder) values ('running_state','运行状态','0','停止','');
+INSERT INTO YH_DICT(dictname,dictdesc,mykey,val,myOrder) values ('hand_auto','手/自动','0','手动','');
+INSERT INTO YH_DICT(dictname,dictdesc,mykey,val,myOrder) values ('hand_auto','手/自动','1','自动','');
+INSERT INTO YH_DICT(dictname,dictdesc,mykey,val,myOrder) values ('start_stop','启停控制','1','开启','');
+INSERT INTO YH_DICT(dictname,dictdesc,mykey,val,myOrder) values ('start_stop','启停控制','0','关闭','');
+INSERT INTO YH_DICT(dictname,dictdesc,mykey,val,myOrder) values ('trouble_warn','故障报警','0','正常','');
+INSERT INTO YH_DICT(dictname,dictdesc,mykey,val,myOrder) values ('trouble_warn','故障报警','1','报警','');

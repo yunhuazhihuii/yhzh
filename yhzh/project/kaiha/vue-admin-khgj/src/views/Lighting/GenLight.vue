@@ -3,7 +3,7 @@
       <!-- <h2>空调机组参数</h2>  -->
 
         
-      <devdtab :devtypeid="devtypeid" :tabTitle="tabTitle" :floorScopeList="floorScopeList"></devdtab>
+      <devdtab :devtypeid="devtypeid" :tabTitle="tabTitle" :floorScopeList="floorScopeList" :pageCount="pageCount"></devdtab>
 
     </div>
 </template>
@@ -16,6 +16,7 @@ export default{
   data(){
     return {  
        devtypeid: 112, //设备属性编号
+       pageCount: 25, //表格数据行数
        floorScopeList: [{floor1: "-4",floor2: "-4"},
                         {floor1: "-3",floor2: "-3"},
                         {floor1: "-2",floor2: "-2"},

@@ -3,7 +3,7 @@
 		<el-tabs v-model="activeName" @tab-click="toggleTab">
 	      <el-tab-pane label="实时数据" name="first">
 	      	<realtimedtab :devtypeid="devtypeid" :tabTitle="tabTitle" :floorScopeList="floorScopeList" 
-	      		:devAttrData="devAttrData" ></realtimedtab>
+	      		:devAttrData="devAttrData" :pageCount="pageCount"></realtimedtab>
 	      </el-tab-pane>
 	      <el-tab-pane label="历史数据" name="second">
 	      	<hisdtab :devtypeid="devtypeid" :tabTitle="tabTitle" :floorScopeList="floorScopeList" 
@@ -18,7 +18,7 @@
 	import realtimedtab from './dev_rtime_dtab.vue';
 	import hisdtab from './dev_his_dtab.vue';
 	export default {
-		props: ['devtypeid','tabTitle','floorScopeList'],
+		props: ['devtypeid','tabTitle','floorScopeList','pageCount'],
 		data() {
 			return {
 	      		devAttrData:[], //设备属性

@@ -25,14 +25,14 @@
 				<el-table-column prop="devCnName" label="设备名称" :show-overflow-tooltip="true">
 				</el-table-column>
 				<template v-for='(col) in devAttrData'>
-					<el-table-column :show-overflow-tooltip="true" :prop="col.devAtrrId" :label="col.attrCnName"
+					<el-table-column :show-overflow-tooltip="true" :prop="col.devAttrId" :label="col.attrCnName"
 					:width="getColStyle(col.attrWidth)">
 						<template scope="scope">
 							<!-- 属性数据字典不为空，则将值转为对应字典值显示 -->
-							<span style="color: red" v-if="col.attrDict != ''">
-								{{col.dictData[scope.row[col.devAtrrId].value]}}
+							<span style="color: red" v-if="col.attrDict != '' && scope.row[col.devAttrId] != undefined">
+								{{col.dictData[scope.row[col.devAttrId].value]}}
 							</span>
-							<span style="color: red" v-else>{{scope.row[col.devAtrrId].value}}</span>
+							<span style="color: red"  v-else-if="scope.row[col.devAttrId] != undefined">{{scope.row[col.devAttrId].value}}</span>
 							<!-- 单位不为空则显示单位 -->
 							<span v-if="col.attrUnit != ''">{{col.attrUnit}}</span>
 						</template>	
@@ -52,14 +52,14 @@
 				<el-table-column prop="devCnName" label="设备名称" :show-overflow-tooltip="true">
 				</el-table-column>
 				<template v-for='(col) in devAttrData'>
-					<el-table-column :show-overflow-tooltip="true" :prop="col.devAtrrId" :label="col.attrCnName"
+					<el-table-column :show-overflow-tooltip="true" :prop="col.devAttrId" :label="col.attrCnName"
 					:width="getColStyle(col.attrWidth)">
 						<template scope="scope">
 							<!-- 属性数据字典不为空，则将值转为对应字典值显示 -->
-							<span style="color: red" v-if="col.attrDict != ''">
-								{{col.dictData[scope.row[col.devAtrrId].value]}}
+							<span style="color: red" v-if="col.attrDict != '' && scope.row[col.devAttrId] != undefined">
+								{{col.dictData[scope.row[col.devAttrId].value]}}
 							</span>
-							<span style="color: red" v-else>{{scope.row[col.devAtrrId].value}}</span>
+							<span style="color: red"  v-else-if="scope.row[col.devAttrId] != undefined">{{scope.row[col.devAttrId].value}}</span>
 							<!-- 单位不为空则显示单位 -->
 							<span v-if="col.attrUnit != ''">{{col.attrUnit}}</span>
 						</template>	
@@ -73,11 +73,11 @@
 </template>
 
 <script>
-	import { getDevTable } from '../service/getData.js';
+	import { getDevDTab } from '../service/getData.js';
 	import { viewConfig } from '../../config/yhzh_view_cfg.js';
 	import util from '../common/js/util';
 	export default {
-   		props: ['devtypeid','tabTitle','floorScopeList',"devAttrData"],
+   		props: ['devtypeid','tabTitle','floorScopeList',"devAttrData","pageCount"],
    		data() {
 	      return {
 	      	devPointData1:[], //设备及点表信息1
@@ -95,6 +95,15 @@
 	      next();
 	    },
 	    created(){
+        	var that = this;
+        	that.floor1 = that.floorScopeList[0].floor1;
+        	that.floor2 = that.floorScopeList[0].floor2;
+
+	        //websocket连接
+	        this.websocket = io.connect(viewConfig.websocketUrl);
+	        
+            //获取设备及点表信息 以及订阅
+	    	this.qryAndSubsPoints();
 	    },
 	    computed: {
 	    },
@@ -113,6 +122,10 @@
 			queryFloors(index){
 				var that = this;
 				that.floorBtnCho = index; //选中按钮的序号
+				that.floor1 = that.floorScopeList[index].floor1;
+				that.floor2 = that.floorScopeList[index].floor2;
+				//必须加bind(this)，调用方法中this的指向还是本vue
+				this.$options.methods.qryAndSubsPoints.bind(this)();
 			},
 			//设置表格列的宽度
     		getColStyle(colWidth){
@@ -136,6 +149,74 @@
 					return "width:" + that.devAttrData[columnIndex-1].attrWidth + "px;color:red;";
 				}*/
 				//console.log("表头数据为",column);
+			},
+			/**
+			*查询与订阅点信息
+			*/
+			qryAndSubsPoints(){
+				var that = this;
+				console.log("floor1与floor2 ==>",that.floor1 + ";" + that.floor2 + ";devtypeid=" + 
+					that.devtypeid + ";pageCount=" + that.pageCount);
+
+				getDevDTab(that.devtypeid,that.floor1,that.floor2,that.pageCount,res=>{
+	            	console.log("获取设备及点表信息==》",res.data);
+	            	that.devPointData1 = res.data.devPointData1;
+	            	that.devPointData2 = res.data.devPointData2;
+		          	for (var i = 0; i < that.devPointData1.length; i++) {
+		          	 	for (var key in that.devPointData1[i]){
+		          	 		if(that.devPointData1[i][key] && that.devPointData1[i][key].pointId){
+		          	 			this.in_outpoint.content.data.subscribeSubitem.push(that.devPointData1[i][key].pointId);
+		          	 		}
+		          	 	}
+		          	}
+		          	for (var i = 0; i < that.devPointData2.length; i++) {
+		          	 	for (var key in that.devPointData2[i]){
+		          	 		if(that.devPointData2[i][key] && that.devPointData2[i][key].pointId){
+		          	 			this.in_outpoint.content.data.subscribeSubitem.push(that.devPointData2[i][key].pointId);
+		          	 		}
+		          	 	}
+		          	}
+	          		console.log("准备发送订阅的数据",this.in_outpoint);
+
+	    	  		//订阅
+	    	  	    this.websocket.emit('clientToS', this.in_outpoint);
+	    	  	    console.log("发送订阅成功");
+
+	    	  		var message=that.websocket.id;
+
+	    	  		//监听接收数据
+	    	  		// if(that.websocket.isConnected()){
+
+	    	  		// 	console.log("websocket是连接着的");
+
+	    	  			//socket事件  接收实时数据
+		    	  		this.websocket.on(message, MESSAAGE => {
+		                 	console.log("适配器发送来的数据",MESSAAGE);
+		                 	let data = MESSAAGE.content.data;
+		                 	data.forEach((sItem,sIndex)=>{
+			                  	that.devPointData1.forEach((tItems,tIndex)=>{
+			                      	// 遍历对象获取映射点
+			                      	for (var key in tItems){
+				                    	// 如果映射点相同就赋值
+				                      	if(sItem.name == tItems[key].pointId){
+				                      		tItems[key].value = sItem.value;        
+				                      	}
+			                      	}
+			                  	});
+			                  	that.devPointData2.forEach((tItems,tIndex)=>{
+			                      	// 遍历对象获取映射点
+			                      	for (var key in tItems){
+				                    	// 如果映射点相同就赋值
+				                      	if(sItem.name == tItems[key].pointId){
+				                      		tItems[key].value = sItem.value;        
+				                      	}
+			                      	}
+			                  	});
+		                 	});
+	              		});
+
+	    	  		// }
+	    		});
 			},
       	}
     }

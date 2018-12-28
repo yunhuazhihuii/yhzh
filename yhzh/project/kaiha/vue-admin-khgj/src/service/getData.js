@@ -33,6 +33,22 @@ export const getDevTable = (devtypeid,floor1,floor2,res) => {
     });
 };
 
+// 获取设备及点映射信息 双表格 chenms 2018-12-28
+export const getDevDTab = (devtypeid,floor1,floor2,pageCount,res) => {
+    axios.post('/get_dev_dtab',{
+      devtypeid:devtypeid, //设备类型编号
+      floor1:floor1, //楼层范围1
+      floor2:floor2, //楼层范围2
+      pageCount:pageCount //表格显示行数
+    })
+    .then(function (response) {
+      res(response.data)
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
+};
+
 // 获取历史数据 chenms 2018-12-10
 export const getHisData = (devtypeid,floor1,floor2,recDate,recTime,res) => {
     axios.post('/get_his_data',{
@@ -50,6 +66,22 @@ export const getHisData = (devtypeid,floor1,floor2,recDate,recTime,res) => {
     });
 };
 
+// 获取历史数据 双表格 chenms 2018-12-28
+export const getHisData2 = (devtypeid,floor1,floor2,recDate,recTime,res) => {
+    axios.post('/get_his_data2',{
+      devtypeid:devtypeid, //设备类型编号
+      floor1:floor1, //楼层范围1
+      floor2:floor2, //楼层范围2
+      recDate:recDate, //日期 yyyy-mm-dd格式
+      recTime:recTime //时间 hh24:min格式，如18:30
+    })
+    .then(function (response) {
+      res(response.data)
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
+};
 
 // 获取某种类型设备历史数据在某一天有记录的时间清单[只查正常间隔记录的时间点] chenms 2018-12-10
 export const getRecTimeList = (devtypeid,recDate,res) => {

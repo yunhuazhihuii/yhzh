@@ -1,0 +1,24 @@
+1.除了生成 node_module模块【npm install命令(或者cnpm install)】，
+还要安装async ：【用于事务处理方法】
+npm install async 
+//或者
+npm install -g async 
+2.
+
+
+
+空调系统
+1.空调机组：办公楼层(1)、裙楼层(1)、地下室、33,
+2.新风机组 ：裙楼层、避难层、
+3.商铺水阀：普通水阀1，普通水阀2, 24小时水阀
+
+18楼：
+空调：办公楼层
+送排风：男女卫生间、茶水间
+送排水：办公楼层
+普通照明：
+其它：1.热水盘管  2.溢水报警
+
+INSERT INTO `yh_dev_info` VALUES ('10010001', null, '1', 'AHU-07-02', '7楼2号空调柜机', null, '1', null);
+INSERT INTO `yh_dev_info` VALUES ('10010002', null, '1', 'AHU-07-01', '7楼1号空调柜机', null, '1', null);
+

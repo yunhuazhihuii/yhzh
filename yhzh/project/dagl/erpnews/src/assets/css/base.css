@@ -1,0 +1,11 @@
+
+*{
+	margin:0;
+	padding:0;
+}
+
+.bj {
+	-moz-box-shadow:-5px 5px 5px rgba(0, 0, 0, 0.349019607843137);
+  	-webkit-box-shadow:-5px 5px 5px rgba(0, 0, 0, 0.349019607843137);
+  	box-shadow:-5px 5px 5px rgba(0, 0, 0, 0.349019607843137);
+}

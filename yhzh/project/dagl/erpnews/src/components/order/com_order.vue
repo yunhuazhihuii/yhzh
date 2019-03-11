@@ -113,7 +113,7 @@
             <el-button class="pen_elbutton" type="info" size="small" @click="ajaxs()">同步订单</el-button>
 
             <!-- 批量导出 -->
-            <el-button class="pen_elbutton" type="info" size="small" @click="exportExcel()">批量导出</el-button>
+            <el-button class="pen_elbutton" type="info" size="small" :loading="downloadLoading" @click="handleDownload">批量导出</el-button>
 
             <!-- 批量打印功能：v-print -->
             <el-button class="pen_elbutton" type="info" size="small" v-print="'#pdfDom'">批量打印</el-button>
@@ -122,11 +122,11 @@
             <!-- 下拉菜单：异常标签 -->
             <el-dropdown>
 
-              <el-button type="info" class="pen_elbutton" size="small">
+              <el-button type="info" class="pen_elbutton" size="small" >
                 异常标签<i class="el-icon-arrow-down el-icon--right"></i>
               </el-button>
 
-              <el-dropdown-menu slot="dropdown">
+              <el-dropdown-menu slot="dropdown" >
                 <!-- v-model="selected" 这个会导致一进页面就弹出下拉 -->
                 <el-dropdown-item>价格出错</el-dropdown-item>
                 <el-dropdown-item>客人需要收据</el-dropdown-item>
@@ -136,6 +136,17 @@
                 <el-dropdown-item>联系不上客户</el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
+
+
+            <!-- <select v-model="selected">
+              <option v-for="option in options" v-bind:value="option.value">
+                {{ option.text }}
+              </option>
+            </select> -->
+
+
+
+
             
             <!--下拉菜单： 普通标签 -->
             <el-dropdown>
@@ -159,7 +170,8 @@
     <!-- 表格信息 -->
     <div class="pen_orderlist" >
 
-        <table  id="pdfDom" @selection-change="handleSelectionChange" width="1710" align="center" cellspacing="0" cellpadding="0" border >
+        <!-- v-loading.body="listLoading" -->
+        <table  id="pdfDom"   @selection-change="handleSelectionChange" highlight-current-row width="1710" align="center" cellspacing="0" cellpadding="0" border >
 
           <tr class="pen_firsttitle">
             <td width="110">
@@ -236,12 +248,15 @@
                   <span>原价:{{item.variation_original_price}}&nbsp;&nbsp;折扣价:{{item.variation_discounted_price}}</span><br>
                   <span>数量:
                     <div class="cirle">{{item.variation_quantity_purchased}}</div>&nbsp;&nbsp;&nbsp;
-                    
-                    <!-- 采购信息 -->
+                      
+                    <!-- 采购信息  trigger="hover"  ref="popover1" v-model="tableData.rowdata.visible"   @show="handleStatus(scope) -->
                     <el-popover
                       placement="right"
+                     
+                      trigger="hover"
+                     
                       width="200"
-                      trigger="hover">
+                      >
                       <div> <!-- 采购信息hover框 -->
                         <template v-for="(item_2,index_2) in rowdata.items">
                           <template v-if="index_2 != 0">
@@ -266,8 +281,13 @@
                           <span>报关名: {{item_2.bgname}}</span><br/><!-- hover 报关名 -->
                         </template>
                       </div>
-                      <span style="text-decoration: underline;" slot="reference">采购信息</span>
+
+                        <!-- :hover="tableData.rowdata.visible = false"   v-popover:popover1-->
+                      <span style="text-decoration: underline;" slot="reference"  >采购信息</span>
+
                   </el-popover>
+
+
                   </span>
 
                   <template v-if="index+1 < rowdata.items.length">
@@ -282,7 +302,7 @@
 
               </td> <!-- 订单日期  发货剩余时间：待完善  -->
 
-              <td>{{rowdata.order_status}}</td> <!-- 订单状态 -->
+              <td>{{rowdata.order_status}}  </td> <!-- 订单状态 -->
 
               <td>{{rowdata.total_amount}}</td> <!-- 订单金额 -->
 
@@ -446,24 +466,40 @@ import XLSX from 'xlsx'
 
     export default{
 
-    	props: [
+      props: [
           'dqwz',   //当前位置
           'orderStatus' //订单状态
       ],
 
 
-	    data(){
+      data(){
 
-	    	return{
-	    		dialogVisible: false,
+        return{
+          dialogVisible: false,
 
           
           totalpage: " ",
           currentPage:1,   //  默认显示第一条
           pageCount:5,//每页显示条数
 
+          // list: null,
+          tableData: [ ],
+          // listLoading: true,
+          multipleSelection: [],
+          downloadLoading: false,
+          filename: '',
 
-	    		tableData: [ ],
+          
+
+          // selected:[ ],
+          // options: [
+          //   { text: 'One', value: 'A' },
+          //   { text: 'Two', value: 'B' },
+          //   { text: 'Three', value: 'C' }
+          // ],
+
+
+          
 
           userid: "", //用户id
 
@@ -482,7 +518,7 @@ import XLSX from 'xlsx'
           data1: '',
           data2: '',
           searchVal:'', //默认输入为空
-          value1: '',
+          value1: '价格出错',
           value2: '',
           value3: '',
           value4: '',
@@ -594,14 +630,16 @@ import XLSX from 'xlsx'
             shippingno: ""//物流单号
           }
 
-	    	}
-	    
-	    },
+        }
+      
+      },
 
 
       created(){
 
         var that =this;
+
+        // this.fetchData();
 
         //从登陆session中获取店铺id
         // that.form.shop_id = getSession("shop_id");
@@ -617,11 +655,12 @@ import XLSX from 'xlsx'
             console.log("物流公司列表",res);
             that.purForm.shipCarrierList = res;
         });
+
       },
 
 
 
-	    methods: {
+      methods: {
 
         ajaxs(){
           console.log("456")
@@ -647,8 +686,79 @@ import XLSX from 'xlsx'
 
         },
 
+
+        fetchData() {
+
+          // this.listLoading = true;
+
+          console.log( '导出Export') 
+
+          var api='http://192.168.1.178:8888/api/ExportOrder';
+            Axios.post(api,{
+            
+            }).then((response)=>{
+
+              this.tableData = response.data;
+              // this.listLoading = false
+
+              console.log( '导出ExportOrder123==>', response.data)  
+
+            }).catch((error)=>{
+
+              console.log("请求数据失败==》", error);
+            })
+        },
+
+        // 导出按钮方法
+        handleDownload() {
+
+          // excel数据导出   tHeader:标题     filterVal：字段名    tableData:前端请求的数据
+
+          //如果存在选中的，则打印
+          if (this.multipleSelection.length) {
+
+            console.log("请求打印数据==》");
+
+            this.downloadLoading = true;
+
+            // // @  :src 
+            
+            // import('../../vendor/Export2Excel').then(excel => {
+            //   // const tHeader = ['Id', 'Title', 'Author', 'Readings', 'Date']
+            //   // const filterVal = ['id', 'title', 'author', 'pageviews', 'display_time']
+              // const tableData = this.multipleSelection
+            //   // const data = this.formatJson(filterVal, tableData)
+            //   // excel.export_json_to_excel({
+            //   //   header: tHeader,
+            //   //   data,
+                // filename: this.filename
+            //   // })
+            //   // this.$refs.multipleTable.clearSelection()
+            //   // this.downloadLoading = false
+            // })
+             //否则，提示
+          } else {   
+            this.$message({
+              message: '请选择',
+              type: 'warning'
+            })
+          }
+        },
+
+        formatJson(filterVal, jsonData) {
+            return jsonData.map(v => filterVal.map(j => v[j]))
+        },
+
+        // 选中时打印
+        handleSelectionChange(val) {
+          this.multipleSelection = val
+        },
+
+
         // exportExcel() {
-        // // excel数据导出   tHeader:标题     filterVal：字段名    tableData:前端请求的数据
+
+        
+
         //     require.ensure([], () => {
         //         const {
         //             export_json_to_excel
@@ -660,23 +770,14 @@ import XLSX from 'xlsx'
         //         export_json_to_excel(tHeader, data, '列表excel');
         //     })
         // },
-        formatJson(filterVal, jsonData) {
-            return jsonData.map(v => filterVal.map(j => v[j]))
-        },
+        
+        
 
-       
-
-
-        handleSelectionChange(val) {
-          this.multipleSelection = val;
-        },
-
-       
 
         getUserShop(){
 
           // http://192.168.0.122:8888/api/
-          var api='http://192.168.0.122:8888/api/getUserShop';
+          var api='http://192.168.1.178:8888/api/getUserShop';
           // var api='http://116.62.112.118:8888/api/getUserShop';
 
           var userid = this.userid
@@ -695,27 +796,6 @@ import XLSX from 'xlsx'
         },
 
 
-        // // 获取待处理订单接口
-        // getData(shopId,createTime1,createTime2,orderStatus,searchType,searchCode,pageIndex,pageCount){
-
-        //       var api='http://116.62.112.118:8888/api/getPendingOrders';
-
-        //           Axios.post(api,{
-        //               shopId: shopId,//店铺id
-        //               createTime1: createTime1,//订单时间 从
-        //               createTime2: createTime2,//订单时间 到
-        //               orderStatus: orderStatus,//订单状态
-        //               searchType: searchType,//精确搜索类型
-        //               searchCode: searchCode,//精确搜索代码
-        //               pageIndex: pageIndex,//页码
-        //               pageCount: pageCount //每页显示条数
-        //           }).then((response)=>{
-        //             this.tableData1=response.data;
-        //             console.log( 'response1==>', response)  
-        //           }).catch((error)=>{
-        //             console.log("请求数据失败==》", error);
-        //           })
-        //   },
 
         /*查询订单信息*/
          qryOrderList(shopId,createTime1,createTime2,orderStatus,searchType,searchCode,pageIndex,pageCount){
@@ -733,6 +813,7 @@ import XLSX from 'xlsx'
 
         /*多个查询条件按钮*/
         qryBtn(){
+
           var that = this;
           let shopId = that.value3;//店铺id
           let createTime1 = that.form.createTime1;//订单时间 从
@@ -770,8 +851,8 @@ import XLSX from 'xlsx'
         },
 
 
-	    	// 获取待处理订单接口
-		    // getData(){
+        // 获取待处理订单接口
+        // getData(){
 
       //       var that = this;
 
@@ -787,7 +868,7 @@ import XLSX from 'xlsx'
       //       // var end   = this.page * this.limit;
 
       //       // 116.62.112.118     192.168.1.187
-		    //     var api='http://116.62.112.118:8888/api/getPendingOrders';
+        //     var api='http://116.62.112.118:8888/api/getPendingOrders';
 
       //       Axios.post(api,{
       //          orderStatus: status //待处理订单参数
@@ -799,77 +880,87 @@ import XLSX from 'xlsx'
       //       }).catch((error)=>{
       //         console.log("请求数据失败==》", error);
       //       })
-		    // },
+        // },
 
-	        /**弹出采购信息填写框
-	        * @input rowIndex 表格行数据所在索引号，从0开始
-	        * @input itemIndex 商品item索引号，从0开始
-	        */
-	        showPurDialog(rowIndex,itemIndex){
-	          var that = this;
-	          that.purForm.rowIndex = rowIndex;
-	          that.purForm.itemIndex = itemIndex;
+          /**弹出采购信息填写框
+          * @input rowIndex 表格行数据所在索引号，从0开始
+          * @input itemIndex 商品item索引号，从0开始
+          */
+          showPurDialog(rowIndex,itemIndex){
+            var that = this;
+            that.purForm.rowIndex = rowIndex;
+            that.purForm.itemIndex = itemIndex;
 
-	          //将该行采购信息数据赋值给 采购信息表单
-	          var rowData = that.tableData[rowIndex];
-	          var itemInfo = rowData.items[itemIndex];
-	          that.purForm.ordersn = rowData.ordersn;
-	          that.purForm.item_id = itemInfo.item_id;
-	          that.purForm.tb_code = itemInfo.tb_code;
-	          that.purForm.tb_order_no = itemInfo.tb_order_no;
-	          that.purForm.purchase_time = itemInfo.purchase_time;
-	          that.purForm.purchase_price = itemInfo.purchase_price;
-	          that.purForm.purchase_note = itemInfo.purchase_note;
-	          that.purForm.tbk_url = itemInfo.tbk_url;
-	          that.purForm.tbk_bl = itemInfo.tbk_bl;
-	          that.purForm.bgname = itemInfo.bgname;
-	          that.purForm.shipping_carrier = itemInfo.shipping_carrier;
-	          that.purForm.shippingno = itemInfo.shippingno;
-	          that.dialogVisible = true;
-	        },
-
-
-	        /*关闭采购信息填写框*/
-	        handleClose(done) {
-	          this.$confirm('确认关闭？')
-	            .then(_ => {
-	              done();
-	            })
-	            .catch(_ => {});
-	        },
+            //将该行采购信息数据赋值给 采购信息表单
+            var rowData = that.tableData[rowIndex];
+            var itemInfo = rowData.items[itemIndex];
+            that.purForm.ordersn = rowData.ordersn;
+            that.purForm.item_id = itemInfo.item_id;
+            that.purForm.tb_code = itemInfo.tb_code;
+            that.purForm.tb_order_no = itemInfo.tb_order_no;
+            that.purForm.purchase_time = itemInfo.purchase_time;
+            that.purForm.purchase_price = itemInfo.purchase_price;
+            that.purForm.purchase_note = itemInfo.purchase_note;
+            that.purForm.tbk_url = itemInfo.tbk_url;
+            that.purForm.tbk_bl = itemInfo.tbk_bl;
+            that.purForm.bgname = itemInfo.bgname;
+            that.purForm.shipping_carrier = itemInfo.shipping_carrier;
+            that.purForm.shippingno = itemInfo.shippingno;
+            that.dialogVisible = true;
+          },
 
 
-	        /*保存采购信息*/
-	        savePurInfoBtn(){
-	            var that = this;
-	            //提交采购信息
-	            submitPurchase(that.purForm.ordersn,that.purForm.item_id,that.purForm.tb_code,
-	                that.purForm.tb_order_no,that.purForm.purchase_time,that.purForm.purchase_price,
-	                that.purForm.purchase_note,that.purForm.tbk_url,that.purForm.tbk_bl,
-	                that.purForm.bgname,that.purForm.shipping_carrier,that.purForm.shippingno,res=>{
-	              console.log("提交采购信息反馈",res);
-	              //若提交成功则更新tableData中采购信息
-	              var rowData = that.tableData[that.purForm.rowIndex];
-	              var itemInfo = rowData.items[that.purForm.itemIndex];
-	              itemInfo.tb_code = that.purForm.tb_code;
-	              itemInfo.tb_order_no = that.purForm.tb_order_no;
-	              itemInfo.purchase_time = that.purForm.purchase_time;
-	              itemInfo.purchase_price = that.purForm.purchase_price;
-	              itemInfo.purchase_note = that.purForm.purchase_note;
-	              itemInfo.tbk_url = that.purForm.tbk_url;
-	              itemInfo.tbk_bl = that.purForm.tbk_bl;
-	              itemInfo.bgname = that.purForm.bgname;
-	              itemInfo.shipping_carrier = that.purForm.shipping_carrier;
-	              itemInfo.shippingno = that.purForm.shippingno;
-	          });
-	          that.dialogVisible = false;
-	        },
+          /*关闭采购信息填写框*/
+          handleClose(done) {
+            this.$confirm('确认关闭？')
+              .then(_ => {
+                done();
+              })
+              .catch(_ => {});
+          },
 
-	        /*关闭采购信息填写框按钮事件*/
-	        closePurDlgBtn(){
-	          var that = this;
-	          that.dialogVisible = false;
-	        },
+
+          /*保存采购信息*/
+          savePurInfoBtn(){
+              var that = this;
+              //提交采购信息
+              submitPurchase(that.purForm.ordersn,that.purForm.item_id,that.purForm.tb_code,
+                  that.purForm.tb_order_no,that.purForm.purchase_time,that.purForm.purchase_price,
+                  that.purForm.purchase_note,that.purForm.tbk_url,that.purForm.tbk_bl,
+                  that.purForm.bgname,that.purForm.shipping_carrier,that.purForm.shippingno,res=>{
+                console.log("提交采购信息反馈",res);
+                //若提交成功则更新tableData中采购信息
+                var rowData = that.tableData[that.purForm.rowIndex];
+                var itemInfo = rowData.items[that.purForm.itemIndex];
+                itemInfo.tb_code = that.purForm.tb_code;
+                itemInfo.tb_order_no = that.purForm.tb_order_no;
+                itemInfo.purchase_time = that.purForm.purchase_time;
+                itemInfo.purchase_price = that.purForm.purchase_price;
+                itemInfo.purchase_note = that.purForm.purchase_note;
+                itemInfo.tbk_url = that.purForm.tbk_url;
+                itemInfo.tbk_bl = that.purForm.tbk_bl;
+                itemInfo.bgname = that.purForm.bgname;
+                itemInfo.shipping_carrier = that.purForm.shipping_carrier;
+                itemInfo.shippingno = that.purForm.shippingno;
+            });
+            that.dialogVisible = false;
+          },
+
+          /*关闭采购信息填写框按钮事件*/
+          closePurDlgBtn(){
+            var that = this;
+            that.dialogVisible = false;
+          },
+
+      
+          //采购信息悬浮
+          handleStatus(scope){
+              console.log(scope.row.userId);
+              var that = this;
+              that.rowdata.index=scope;
+              console.log("scope=",scope);
+
+          },
 
 
           //分页  初始页currentPage、初始每页数据数pagesize和数据testpage
@@ -900,11 +991,15 @@ import XLSX from 'xlsx'
           
             console.log("pageIndex==>", this.form.pageIndex);
               
-          }
-          
-	    },
+          },
 
-	    mounted(){
+
+
+
+          
+      },
+
+      mounted(){
 
         // var that = this;
         //从登陆session中获取店铺id
@@ -1123,11 +1218,16 @@ import XLSX from 'xlsx'
 }
 
 .imginfan img {
-  text-align:center;
+
+  /*text-align:center;
   position: absolute;
   top:50%; 
   left:50%;
   transform: translate(-50%,-50%);
+
+  */
+
+  margin: 10px 5px;
   transition: all 0.6s; 
 }
 
@@ -1151,12 +1251,19 @@ display: none;
 .tooltip:hover .inner{    /*span 标签仅在 :hover 状态时显示*/
 display:block;
 position:absolute;
+top:-30px;
+left:150px;
+/*
 top:100px;
 left:250px;
-border:1px solid black;
+
 background-color:#F2F2F2;
 padding: 3px;
 color:black;
+border:1px solid black;
+
+*/
+
 text-align:left;
 z-index:999;
 }

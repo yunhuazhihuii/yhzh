@@ -10,12 +10,14 @@ axios.defaults.baseURL=viewConfig.restUrl     //全局基础路径
 
 
 // 获取订单列表 chenms 2019-2-6    可调
-export const getOrderList = (shopId,createTime1,createTime2,orderStatus,searchType,searchCode,pageIndex,pageCount,res) => {
+export const getOrderList = (shopId,createTime1,createTime2,orderStatus,labelid2,labelid1,searchType,searchCode,pageIndex,pageCount,res) => {
     axios.post('/getPendingOrders',{
       shopId: shopId,//店铺id
       createTime1: createTime1,//订单时间 从
       createTime2: createTime2,//订单时间 到
       orderStatus: orderStatus,//订单状态
+      labelid2:labelid2, // 异常标签
+      labelid1:labelid1, // 普通标签
       searchType: searchType,//精确搜索类型
       searchCode: searchCode,//精确搜索代码
       pageIndex: pageIndex,//页码

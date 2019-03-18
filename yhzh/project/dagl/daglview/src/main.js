@@ -12,6 +12,20 @@ window.axios = require('axios');
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest'
 Vue.prototype.$http = window.axios
 
+import Print from 'vue-print-nb'
+Vue.use(Print); //注册
+
+
+//引入echarts
+import echarts from 'echarts'
+//将echarts存到vue的原型中
+Vue.prototype.$echarts = echarts
+
+
+// 导出exsl表
+// import Blob from './excel/Blob.js'
+// import Export2Excel from './excel/Export2Excel.js'
+
 
 // import htmlToPdf from '@/components/utils/htmlToPdf'
 // Vue.use(htmlToPdf)
@@ -58,8 +72,12 @@ import Login from './components/login.vue'
 	import mainsys from './components/sys/mainsys.vue'
 	import Purchase from './components/sys/Purchase.vue'
 	import role from './components/sys/role.vue'
+		import RoleAdd from './components/sys/roleadd.vue'
 	import staff from './components/sys/staff.vue'
+		import StaffAdd from './components/sys/staffadd.vue'
 	import shopping from './components/sys/shopping.vue'
+	import Notice from './components/sys/notice.vue'
+	import Tool from './components/sys/tool.vue'
 	
 
 
@@ -125,8 +143,12 @@ const routes = [
 			{ path: 'mainsys', component: mainsys },
 			{ path: 'Purchase', component: Purchase },
 			{ path: 'role', component: role },
+			{ path: 'roleadd', component: RoleAdd },
 			{ path: 'shopping', component: shopping },
-			{ path: 'staff', component: staff }
+			{ path: 'staff', component: staff },
+			{ path: 'staffadd', component: StaffAdd },
+			{ path: 'notice', component: Notice },
+			{ path: 'tool', component: Tool }
 			
 		
 		]
@@ -136,6 +158,7 @@ const routes = [
 ]
 
 const router = new  VueRouter({
+	mode: 'history',
 	routes: routes
 })
 

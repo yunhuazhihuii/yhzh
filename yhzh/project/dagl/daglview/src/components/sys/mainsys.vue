@@ -2,7 +2,7 @@
     <div id="allorder">  
 
       <!-- 当前位置： -->
-      <div class="position"><span> 当前位置：{{ msg}} </span></div> 
+      <div class="position"><span> 当前位置：系统管理 > 主页管理</span></div> 
 
       <!-- 发布公告开始 -->
       <div class="Announcement"> 
@@ -135,8 +135,7 @@
     export default{
         data(){
             return {               
-              msg:'系统管理 > 主页管理',
-
+          
               multipleSelection: [],
 
               currentPage:1,//

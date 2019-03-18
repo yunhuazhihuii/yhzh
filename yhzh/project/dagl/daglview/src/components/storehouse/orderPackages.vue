@@ -66,7 +66,9 @@
               
               <!-- 包裹循环，“包裹到达顺序”不为空才需要显示 -->
               <template v-for="(pkg,pkgindex) in order.packages">
+
                 <template v-if="pkg.reciorder != ''">
+
                   <p>包裹{{pkg.reciorder}}：{{pkg.shipping_carrier}}&nbsp;&nbsp;{{pkg.shippingno}}
                     
 
@@ -75,8 +77,10 @@
                       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;该包裹已扫描，存入周转筐：
                         <span class="numtext">{{pkg.bgzzkh}}</span>
                     </template>
+
                     <!-- 对于包裹周转筐号为空,且物流单号为当前查询输入的物流单号-->
                     <template v-if="pkg.bgzzkh == '' && pkg.shippingno == qry_shippingno">
+
                       <!-- 若包裹到达顺序等于包裹总数，说明订单的包裹已经到齐，可以打印面单了 -->
                       <template v-if="pkg.reciorder == order.packages.length">
                         <el-button type="primary" size="mini" @click="printBillBtn(order.ordersn,order.airway_bill)" class="btn_dymd">打印面单</el-button>
@@ -95,6 +99,7 @@
               </template>
               <p><span class="numtext">备注：</span>{{order.items[0].purchase_note}}</p>
             </div>
+            
             <hr style="height:2px;border:none;border-top:1px solid #555555; clear: both;" />
           </div>
 

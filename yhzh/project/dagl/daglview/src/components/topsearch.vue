@@ -112,7 +112,7 @@ import Axios from 'axios';
     data(){
         return {
           form:{
-            shop_id: "", //店铺id
+            userid: "", //店铺id
             // orderStatus: "READY_TO_SHIP", // 订单状态
             createTime1: "", //订单时间 从
             createTime2: "", //订单时间 到
@@ -191,30 +191,7 @@ import Axios from 'axios';
           ],
 
           options3:[
-            {
-              value: '选项1',
-              label: '2587953548sagv'
-            }, 
-            {
-              value: '选项2',
-              label: '25953548sagva'
-            }, 
-            {
-              value: '选项3',
-              label: '7953548sagva'
-            }, 
-            {
-              value: '选项2-2',
-              label: '25953548sagva'
-            }, 
-            {
-              value: '选项3-2',
-              label: '7953548sagva'
-            }, 
-            {
-              value: '选项4',
-              label: '258795348sagva'
-            }
+           
 
           ],
           options4:[
@@ -245,12 +222,38 @@ import Axios from 'axios';
         //从登陆session中获取店铺id
         that.form.shop_id = getSession("shop_id");
     },
+
+    mounted(){
+        // var that = this;
+        //从登陆session中获取店铺id
+        this.userid = getSession("user_id");
+        // console.log(this.userid+'444')
+        // this.options3 = getSession('shop_id')
+        this.getUserShop()
+        // console.log(this.options3+"-----shopid数组------")
+    },
+
     methods:{
+
+      getUserShop(){
+        var api='http://116.62.112.118:8888/api/getUserShop';
+        var userid = this.userid
+        // console.log(userid+"888")
+          Axios.post(api,{
+            userid:userid
+          }).then((response)=>{
+            console.log( 'response1==>', response)  
+            this.options3 = response.data
+            console.log(this.options3)
+          }).catch((error)=>{
+            console.log("请求数据失败==》", error);
+          })
+      },
 
       // 获取待处理订单接口
         getData(shopId,createTime1,createTime2,orderStatus,searchType,searchCode,pageIndex,pageCount){
 
-            var api='http://116.62.112.118/api/getPendingOrders';
+            var api='http://116.62.112.118:8888/api/getPendingOrders';
 
                 Axios.post(api,{
                     shopId: shopId,//店铺id

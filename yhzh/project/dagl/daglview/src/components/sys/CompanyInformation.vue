@@ -8,16 +8,46 @@
           </div>
           <div class="content-botton">
               <el-row class="elrow">
-                  <el-button class="elbutton" size="small">添加</el-button>
+                  <el-button @click="dialogVisible = true" class="elbutton" size="small">添加</el-button>
                   <el-button class="elbutton" size="small">修改</el-button>
                   <el-button class="elbutton" size="small">删除</el-button>
                   
               </el-row>
           </div> 
+
+           <el-dialog
+            title="添加公司"
+            :visible.sync="dialogVisible"
+            width="30%"
+            :before-close="handleClose">
+            <el-form :model="form">
+              <el-form-item label="公司ID:" :label-width="formLabelWidth">
+                <el-input v-model="form.comid" autocomplete="off" size="small" style="width:70%"></el-input>
+              </el-form-item>
+              <el-form-item label="公司名称:" :label-width="formLabelWidth">
+                <el-input v-model="form.comname" autocomplete="off" size="small" style="width:70%"></el-input>
+              </el-form-item>
+              <el-form-item label="管理员账号:" :label-width="formLabelWidth">
+                <el-input v-model="form.account" autocomplete="off" size="small" style="width:70%"></el-input>
+              </el-form-item>
+              <el-form-item label="密码:" :label-width="formLabelWidth">
+                <el-input v-model="form.password" autocomplete="off" size="small" style="width:70%"></el-input>
+              </el-form-item>
+              <el-form-item label="备注:" :label-width="formLabelWidth">
+                <el-input type="textarea" v-model="form.desc" :rows="7" style="width:70%"></el-input>
+              </el-form-item>
+              
+
+            </el-form>
+            <span slot="footer" class="dialog-footer">
+              <el-button @click="dialogVisible = false">取 消</el-button>
+              <el-button type="primary" @click="saveNotice">添 加</el-button>
+            </span>
+          </el-dialog>  
                  
               
           
-          <el-input class="elinput" v-model="input" size="small" placeholder="公司ID/公司名称"></el-input>
+          <el-input class="elinput" size="small" placeholder="公司ID/公司名称"></el-input>
             &nbsp;&nbsp;&nbsp;
           <el-button class="serbutton" type="primary" size="small" icon="el-icon-search"></el-button> 
           <div class="shoplist">
@@ -102,15 +132,30 @@
 
 
 <script>
-    import Axios from 'axios';
+
+import Axios from 'axios';
+import url from '../../../config/sysAPI.config.js';
+import {getSession} from '../../common/js/util';
     export default{
         data(){
-            return {               
+            return {     
+                        
+              userids:'',       
               tableData: [  
                     
               ],
               currentPage:1,
               pagesize:5,
+              dialogVisible: false, 
+              formLabelWidth: '120px',
+              form: {
+                comid: '',
+                comname: '',
+                account: '',
+                password: '',
+                desc: ''
+                
+              },
              
             }
         },
@@ -129,13 +174,25 @@
           handleDelete(index, row) {
             console.log(index, row);
           },
+
+          handleClose(done) {
+            this.$confirm('确认关闭？')
+              .then(_ => {
+                done();
+              })
+              .catch(_ => {});
+          },
+
           getCompList(){
+            
+
             //请求数据
-            var api = 'http://192.168.1.187:8888/api/getCompList';
+            var api = url.getCompList;
             var _this = this
+            // console.log(_this.userids)
             Axios.post(api,
               {
-
+                userid:_this.userids
               }
             )
             .then((response)=>{
@@ -149,6 +206,8 @@
           }
         },
         mounted(){
+          this.userids = getSession("user_id");
+          console.log(this.userids)
           this.getCompList();
         }       
     }

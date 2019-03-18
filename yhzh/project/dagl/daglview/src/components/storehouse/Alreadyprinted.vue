@@ -18,7 +18,7 @@
         data(){
             return {    
                 dqwz: "交易管理>已打印订单", //当前位置
-                orderStatus: "TO_BE_RECEIVED"  //订单状态： 待收货        
+                // orderStatus: "TO_BE_RECEIVED"  //订单状态： 待收货        
             }
         }       
     }

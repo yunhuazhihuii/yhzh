@@ -71,7 +71,7 @@
                             // 用户名字
                             // setSession('name',res.data.roleid);
                             // setSession('shop_id',res.data.shop_id);
-                            setSession('name',res.roleid);
+                            setSession('user_id',res.userid);
                             setSession('shop_id',res.shop_id);
                            _this.$router.push({ path: '/home' });
                           }else{

@@ -8,7 +8,7 @@
           </div>
           <div class="content-botton">
               <el-row class="elrow">
-                  <el-button class="elbutton" size="small">添加</el-button>
+                  <el-button class="elbutton" size="small" @click="goroleadd">添加</el-button>
                   <el-button class="elbutton" size="small">修改</el-button>
                   <el-button class="elbutton" size="small">删除</el-button>
                   
@@ -17,7 +17,7 @@
                  
               
           
-          <el-input class="elinput" v-model="input" size="small" placeholder="公司ID/公司名称"></el-input>
+          <el-input class="elinput" size="small" placeholder="公司ID/公司名称"></el-input>
             
           <el-button class="serbutton" type="primary" size="small" icon="el-icon-search"></el-button> 
           <div class="shoplist">
@@ -26,6 +26,7 @@
               border
               :header-cell-style="{background:'#F2F2F2'}"
               style="width: 100%"
+              @selection-change="handleSelectionChange"
               >
               <el-table-column
                 type="selection"
@@ -95,20 +96,32 @@
 
 
 <script>
-    import Axios from 'axios';
+
+import Axios from 'axios';
+import url from '../../../config/sysAPI.config.js'
     export default{
         data(){
-            return {               
-               tableData: [
-                  
-                
-                ],
+            return {       
+              multipleSelection: [],        
+               tableData: [ ],
+
                 currentPage:1,
                 pagesize:5,
              
             }
         },
         methods: {
+
+          goroleadd(){
+            this.$router.push({path:'/sys/roleadd'})
+          },
+          // 选择后可以获取到这一行的数据val把它放到multipleSelection
+           handleSelectionChange(val) {
+            this.multipleSelection = val;
+            console.log(val)
+          },
+
+
           handleEdit(index, row) {
             console.log(index, row);
           },
@@ -117,7 +130,7 @@
           },
            getRoleList(){
             //请求数据
-            var api = 'http://192.168.1.187:8888/api/getRoleList';
+            var api = url.getRoleList;
             var _this = this
             Axios.post(api,
               {

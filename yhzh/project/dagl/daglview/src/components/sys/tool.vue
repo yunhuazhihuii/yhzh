@@ -3,7 +3,7 @@
         <div class="content">
           <div class="content-top">
             <div class="content-top-title">
-              <p>当前位置：交易管理>标签管理</p>
+              <p>当前位置：交易管理>发布常用工具管理</p>
             </div>
           </div>
           <div class="content-botton">
@@ -11,37 +11,23 @@
                   <el-button class="elbutton" size="small" @click="dialogVisible = true">添加</el-button>
                   <el-button class="elbutton" size="small" @click="changenotice">修改</el-button>
                   <el-button class="elbutton" size="small" @click="delnotice">删除</el-button>
-                 <!--  <el-button class="elbutton" size="small" @click="looknotice">查看</el-button> -->
+                  <el-button class="elbutton" size="small" @click="looknotice">查看</el-button>
                   <!-- <el-button class="elbutton" size="small">导出</el-button> -->
               </el-row>
           </div> 
 
         <el-dialog
-          title="添加标签"
+          title="发布常用工具"
           :visible.sync="dialogVisible"
           width="40%"
           :before-close="handleClose">
           <el-form :model="form">
-            <el-form-item label="标签:" :label-width="formLabelWidth">
-              <el-input v-model="form.label" autocomplete="off" size="small" style="width:50%"></el-input>
+            <el-form-item label="工具名称:" :label-width="formLabelWidth">
+              <el-input v-model="form.title" autocomplete="off" size="small" style="width:50%"></el-input>
             </el-form-item>
-            <el-form-item label="排序:" :label-width="formLabelWidth">
-              <el-input v-model="form.desc" autocomplete="off" size="small" style="width:50%"></el-input>
+            <el-form-item label="工具链接:" :label-width="formLabelWidth">
+              <el-input type="textarea" v-model="form.desc" :rows="10" style="width:88%"></el-input>
             </el-form-item>
-            <el-form-item label="选择类型:" :label-width="formLabelWidth">
-              <el-select v-model="value" size="small" placeholder="请选择">
-                <el-option
-                  v-for="item in options"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value">
-                </el-option>
-              </el-select>
-            </el-form-item>
-           <el-form-item label="选择颜色:" :label-width="formLabelWidth">
-              <el-color-picker v-model="form.color1"></el-color-picker>
-            </el-form-item>
-
           </el-form>
           <span slot="footer" class="dialog-footer">
             <el-button @click="dialogVisible = false">关 闭</el-button>
@@ -50,35 +36,40 @@
         </el-dialog>
 
         <el-dialog
-          title="修改标签"
+          title="查看工具"
+          :visible.sync="dialogVisiblel"
+          width="40%"
+          :before-close="handleClose">
+          <el-form :model="form2">
+            <el-form-item label="工具名称:" :label-width="formLabelWidth">
+              <el-input v-model="form2.title" :disabled="true" autocomplete="off" size="small" style="width:50%"></el-input>
+            </el-form-item>
+            <el-form-item label="工具链接:" :label-width="formLabelWidth">
+              <el-input type="textarea" v-model="form2.desc" :disabled="true" :rows="10" style="width:88%"></el-input>
+            </el-form-item>
+          </el-form>
+         <!--  <span slot="footer" class="dialog-footer">
+            <el-button @click="dialogVisiblel = false">关 闭</el-button>
+            <el-button type="primary" @click="saveNoticel">发 布</el-button>
+          </span> -->
+        </el-dialog>
+
+        <el-dialog
+          title="修改工具数据"
           :visible.sync="dialogVisiblec"
           width="40%"
           :before-close="handleClose">
           <el-form :model="form1">
-            <el-form-item label="标签:" :label-width="formLabelWidth">
-              <el-input v-model="form1.label" autocomplete="off" size="small" style="width:50%"></el-input>
+            <el-form-item label="工具名称:" :label-width="formLabelWidth">
+              <el-input v-model="form1.title" autocomplete="off" size="small" style="width:50%"></el-input>
             </el-form-item>
-            <el-form-item label="排序:" :label-width="formLabelWidth">
-              <el-input v-model="form1.desc" autocomplete="off" size="small" style="width:50%"></el-input>
+            <el-form-item label="工具链接:" :label-width="formLabelWidth">
+              <el-input type="textarea" v-model="form1.desc" :rows="10" style="width:88%"></el-input>
             </el-form-item>
-            <el-form-item label="选择类型:" :label-width="formLabelWidth">
-              <el-select v-model="value1" size="small" placeholder="请选择">
-                <el-option
-                  v-for="item in options"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value">
-                </el-option>
-              </el-select>
-            </el-form-item>
-           <el-form-item label="选择颜色:" :label-width="formLabelWidth">
-              <el-color-picker v-model="form1.color1"></el-color-picker>
-            </el-form-item>
-
           </el-form>
           <span slot="footer" class="dialog-footer">
             <el-button @click="dialogVisiblec = false">关 闭</el-button>
-            <el-button type="primary" @click="saveNoticec">发 布</el-button>
+            <el-button type="primary" @click="saveNoticec">修 改</el-button>
           </span>
         </el-dialog>
 
@@ -87,8 +78,7 @@
             <el-table
               :data="tableData.slice((currentPage - 1) * pagesize, currentPage * pagesize)"
               border
-              :cell-style = "cellStyle"
-              :header-cell-style="{background:'#eef1f6',color:'#606266'}"
+              :header-cell-style="{background:'#F2F2F2'}"
               @selection-change="handleSelectionChange"
               style="width: 100%"
               >
@@ -97,26 +87,20 @@
                 width="50">
               </el-table-column>
               <el-table-column
-                prop="labelname"
-                label="标签"
+                prop="tool_name"
+                label="公告标题"
                 align="center"
-                width="250">
+                width="300">
               </el-table-column>
               <el-table-column
-                prop="lblorder"
-                label="排序"
-                width="250"
-                align="center">
+                prop="tool_content"
+                label="链接"
+                align="center"
+                width="400">
               </el-table-column>
               <el-table-column
-                prop="color"
-                label="颜色"
-                width="300"
-                align="center">
-              </el-table-column>
-              <el-table-column
-                prop="labeltype"
-                label="标签类型"
+                prop="tool_cretime"
+                label="发布时间"
                 width="300"
                 align="center">
               </el-table-column>
@@ -155,10 +139,7 @@
     import url from '../../../config/sysAPI.config.js'
     export default{
         data(){
-            return {  
-              value: '',  
-              value1: '', 
-              color1: '#409EFF',
+            return {    
               multipleSelection:[],           
               tableData: [],
               currentPage:1,
@@ -167,28 +148,20 @@
               dialogVisiblec: false,
               dialogVisiblel: false,
               formLabelWidth: '120px',
-             options: [
-                {
-                  value: '普通标签',
-                  label: '普通标签'
-                }, 
-                {
-                  value: '异常标签',
-                  label: '异常标签'
-                },
-              ],
               form: {
-                label: '',
-                desc: '',
-                color1: '#409EFF',
+                title: '',
+                desc: ''
               },
               form1: {
                 id: '',
-                label: '',
-                desc: '',
-                color1: '',
+                title: '',
+                desc: ''
               },
-          
+              form2: {
+                id: '',
+                title: '',
+                desc: ''
+              },
             }
         },
         methods: {
@@ -212,29 +185,26 @@
           },
           saveNotice(){
             var that = this;
-            var api = url.addLabel;
+            var api = url.addTool;
             Axios.post(api,
               {
-                labelid:'0',
-                labelname:that.form.label,
-                labeltype:that.value,
-                color:that.form.color1,
-                lblorder:that.form.desc
+                tool_name:that.form.title,
+                tool_content:that.form.desc,
               }
             )
             .then((response)=>{
               console.log(response)
               that.dialogVisible = false;
-              that.getLabelList()
+              that.getToolList()
             })
             .catch((error)=>{
               console.log(error)
             })
           },
 
-            getLabelList(){
+            getToolList(){
             //
-            var api = url.getLabelList;
+            var api = url.getToolList;
             var _this = this
             Axios.post(api,
               {
@@ -242,7 +212,7 @@
               }
             )
             .then((response)=>{
-              console.log(response);
+              console.log(response.data);
               _this.tableData=response.data;
 
             })
@@ -253,33 +223,25 @@
           changenotice(){
             this.dialogVisiblec=true
             console.log(this.multipleSelection)
-            this.form1.id=this.multipleSelection[0].labelid
-            this.form1.label=this.multipleSelection[0].labelname
-            this.form1.desc=this.multipleSelection[0].lblorder
-            this.value1=this.multipleSelection[0].labeltype
-            this.form1.color1=this.multipleSelection[0].color
-
+            this.form1.id=this.multipleSelection[0].tool_id
+            this.form1.title=this.multipleSelection[0].tool_name
+            this.form1.desc=this.multipleSelection[0].tool_content
           },
           saveNoticec(){
             var that = this;
-            var api = url.addLabel;
+            var api = url.updateTool;
 
              Axios.post(api,
               {
-        
-
-                labelid:that.form1.id,
-                labelname:that.form1.label,
-                labeltype:that.value1,
-                color:that.form1.color1,
-                lblorder:that.form1.desc
-
+                tool_id:that.form1.id,
+                tool_name:that.form1.title,
+                tool_content:that.form1.desc,
               }
             )
             .then((response)=>{
               console.log(response)
               that.dialogVisiblec = false;
-              that.getLabelList()
+              that.getToolList()
             })
             .catch((error)=>{
               console.log(error)
@@ -289,7 +251,7 @@
           delnotice(){
              var _this = this
               
-              var labelid = this.multipleSelection[0].labelid
+              var tool_id = this.multipleSelection[0].tool_id
               // window.alert("群定")
               this.$confirm('确认删除这条记录吗?', '提示', {
                 confirmButtonText: '确定',
@@ -298,10 +260,10 @@
               }).then((action) => {
                 if(action==='confirm'){
                     // console.log("6666666666669999999999999")
-                    var api = url.delLabel
+                    var api = url.delTool
                     Axios.post(api,
                       {
-                        labelid:labelid,
+                        tool_id:tool_id,
                         
                       }
                     )
@@ -314,7 +276,7 @@
                           message: '删除成功!'
                         });
                         // location.reload()
-                        _this.getLabelList()
+                        _this.getToolList()
                     })
                     .catch((error)=>{
                       console.log(error);
@@ -330,36 +292,15 @@
                 });          
               });
           },
-
-          // cellcolor(row,column,rowindex,columnindex){
-          //   if(rowindex == 1){
-          //     return 'background-color: lightblue'
-
-          //   }
-          // }
           // 查看
-          // looknotice(){
-          //   this.dialogVisiblel=true
-          //   this.form2.title=this.multipleSelection[0].bulletin_name
-          //   this.form2.desc=this.multipleSelection[0].bulletin_content
-          // }
-
-
-          // tableRowStyle({ row, rowIndex }) {
-          //   return 'background-color: pink'
-          // },
-
-          cellStyle:function(row,column,rowIndex,columnIndex){
-              console.log(row.row.color)
-              if(row.columnIndex == 3 && row.rowIndex == 1){
-                // return 'background-color:#409EFF'
-              }else{
-                return ''
-              }
+          looknotice(){
+            this.dialogVisiblel=true
+            this.form2.title=this.multipleSelection[0].tool_name
+            this.form2.desc=this.multipleSelection[0].tool_content
           }
         },
         mounted(){
-          this.getLabelList();
+          this.getToolList();
         }    
     }
 
@@ -437,4 +378,5 @@
     color: #fff;
     font-weight: bold;
   }
+
 </style>

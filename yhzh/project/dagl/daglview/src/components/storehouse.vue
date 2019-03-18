@@ -92,7 +92,7 @@
 
 <style scoped>
 .content{
-  overflow: hidden;
+  
 }
 
 </style>

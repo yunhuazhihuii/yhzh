@@ -8,7 +8,7 @@
           </div>
           <div class="content-botton">
               <el-row class="elrow">
-                  <el-button class="elbutton" size="small">添加</el-button>
+                  <el-button class="elbutton" size="small" @click="gostaffadd">添加</el-button>
                   <el-button class="elbutton" size="small">修改</el-button>
                   <el-button class="elbutton" size="small">删除</el-button>
                   
@@ -17,7 +17,7 @@
                  
               
           
-          <el-input class="elinput" v-model="input" size="small" placeholder="公司ID/公司名称"></el-input>
+          <el-input class="elinput"  size="small" placeholder="公司ID/公司名称"></el-input>
            
           <el-button class="serbutton" type="primary" size="small" icon="el-icon-search"></el-button> 
           <div class="shoplist">
@@ -95,7 +95,9 @@
 
 
 <script>
-    import Axios from 'axios';
+
+import Axios from 'axios';
+import url from '../../../config/sysAPI.config.js';
     export default{
         data(){
             return {               
@@ -111,9 +113,12 @@
           handleDelete(index, row) {
             console.log(index, row);
           },
-             getStaffList(){
+          gostaffadd(){
+            this.$router.push({path:'/sys/staffadd'})
+          },
+          getStaffList(){
             //请求数据
-            var api = 'http://192.168.1.187:8888/api/getStaffList';
+             var api = url.getStaffList;
             var _this = this
             Axios.post(api,
               {

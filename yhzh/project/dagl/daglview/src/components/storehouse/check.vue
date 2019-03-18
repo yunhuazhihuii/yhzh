@@ -17,10 +17,15 @@
             @click="qryByShipnoBtn()" >查询</el-button>
         </span>
 
+
+
       </div>
 
     </div>
     <div>  
+
+      <iframe style="display:none" id="printIframe"></iframe>
+
     
       <!-- <v-orderPackages :qry_shippingno="qry_shippingno" :orderShipnoRef="orderShipnoRef"></v-orderPackages> -->
 
@@ -92,7 +97,7 @@
                   <div class="productdiv">
                     <div>
                       <span class="productlabel">产品{{itemindex+1}}： </span>
-                      
+                      <!-- 产品图片循环 -->
                       <template v-for="(img,imgindex) in item.images">
                        
                         <img :src="img.src" width="50" height="50">
@@ -104,20 +109,17 @@
                 
                <!-- 包裹信息 -->
                 <template v-for="(pkg,pkgindex) in order.packages">
-
                   <template v-if="pkg.reciorder != ''">
-
-                    <!-- 包裹编号、物流公司、物流单号-->
-                    <p>包裹123 {{pkg.reciorder}}：{{pkg.shipping_carrier}}&nbsp;&nbsp;{{pkg.shippingno}}
-
-                    
-                      <template v-if="pkg.bgzzkh == '' && pkg.shippingno == qry_shippingno">
-                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;该包裹已扫描，输入周转筐：--       打印面单1
-                          <span class="numtext">{{pkg.bgzzkh}}</span>
-                      </template>
+                    <p>包裹{{pkg.reciorder}}：{{pkg.shipping_carrier}}&nbsp;&nbsp;{{pkg.shippingno}}
+                      
 
                       
-                      <template v-if="">
+                      <template v-if="pkg.bgzzkh == '' && pkg.shippingno == qry_shippingno">
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;该包裹已扫描，存入周转筐：
+                          <span class="numtext">{{pkg.bgzzkh}}</span>
+                      </template>
+                      
+                      <template  v-if="pkg.bgzzkh != ''">
                         
                         <template v-if="pkg.reciorder == order.packages.length">
                           <el-button type="primary" size="mini" @click="printBillBtn(order.ordersn,order.airway_bill)" class="btn_dymd">打印面单</el-button>
@@ -125,7 +127,7 @@
 
                         <template v-else>
                           <el-input size="small" class="bgzzkh_inp" v-model="bgzzkh"></el-input>
-                          <el-button type="primary" size="mini" @click="saveBgzzkhBtn(order.ordersn,pkg.shippingno,bgzzkh)">输入包裹周转筐号 --       打印面单2</el-button>
+                          <el-button type="primary" size="mini" @click="saveBgzzkhBtn(order.ordersn,pkg.shippingno,bgzzkh)">输入包裹周转筐号</el-button>
                         </template>
 
                       </template>
@@ -136,6 +138,8 @@
                 <p><span class="numtext">备注：</span>{{order.items[0].purchase_note}}</p>
               </div>
 
+              <!-- 打印面单 -->
+              
               <!-- 分割线 -->
               <hr style="height:2px;border:none;border-top:1px solid #555555; clear: both;" />
             </div>
@@ -154,14 +158,36 @@
 <script>
 import Axios from 'axios';
 
- import packageList from './packageList.vue';
- import orderPackages from './orderPackages.vue';
- import {qryOrderByShipno} from '../../service/getData.js';
- 
- import {getSession} from '../../common/js/util';
- import {submitBgzzkh,printBill} from '../../service/getData.js';
+import packageList from './packageList.vue';
+import orderPackages from './orderPackages.vue';
+import {qryOrderByShipno} from '../../service/getData.js';
 
-    export default{
+import {getSession} from '../../common/js/util';
+import {submitBgzzkh,printBill} from '../../service/getData.js';
+
+// import $ from 'expose?$!jquery';
+
+ 
+
+// $(document).ready(function(){
+    
+//     $("#printIframe").load(function(){//等待iframe加载完成后再执行doPrint.每次iframe设置src之后都会重新执行这部分代码。
+//         doPrint();
+//     });
+   
+// });
+
+
+//点击打印按钮，触发事件
+// function printPDF(){
+//     var src = $("#printIframe").attr("src");
+//     if(!src){//当src为空，即第一次加载时才赋值，如果是需要动态生成的话，那么条件要稍稍变化一下
+//                 $("#printIframe").attr("src","./attachment/Images.pdf");//暂时静态PDF文件
+//     }else
+//         $("#printIframe")[0].contentWindow.print();//不知为什么在IE中一直无法打印文件
+// }
+
+export default{
 
       components:{
         'v-packageList':packageList,
@@ -175,7 +201,7 @@ import Axios from 'axios';
             // tabledata2:[],
 
             position:"仓库管理>拆件核对包裹",
-            qry_shippingno: " ", //物流单号查询条件
+            qry_shippingno:"", //物流单号查询条件
 
              //查询到的订单包裹信息
             orderShipnoRef: [ ]
@@ -184,53 +210,53 @@ import Axios from 'axios';
 
       methods: {
 
-        qryOrderByShipno(){
+        // qryOrderByShipno(){
                
-            // 4.1.根据物流单号查询所有对应订单信息    shippingno   116.62.112.118
-           var api='http://116.62.112.118:8888/api/qryOrderByShipno';
+        //     // 4.1.根据物流单号查询所有对应订单信息    shippingno   116.62.112.118
+        //    var api='http://116.62.112.118:8888/api/qryOrderByShipno';
           
-            Axios.post(api,{
-              shippingno:shippingno //物流单号
-            }).then((response)=>{
-                this.orderShipnoRef=response.data;
-                console.log( 'response11==>', response)  
-            }).catch((error)=>{
-                console.log("请求数据失败==》", error);
-            })
-        },
+        //     Axios.post(api,{
+        //       shippingno:shippingno //物流单号
+        //     }).then((response)=>{
+        //         this.orderShipnoRef=response.data;
+        //         console.log( 'response11==>', response)  
+        //     }).catch((error)=>{
+        //         console.log("请求数据失败==》", error);
+        //     })
+        // },
 
-        submitBgzz(){
+        // submitBgzz(){
                
-            // 4.1.根据submitBgzzkh信息    shippingno   
-            var api='http://116.62.112.118:8888/api/submitBgzzkh';
+        //     // 4.1.根据submitBgzzkh信息    shippingno   
+        //     var api='http://116.62.112.118:8888/api/submitBgzzkh';
           
-            Axios.post(api,{
-              "ordersn":"19012109163H0E9",
-              "shippingno":"111",  //物流单号    
-              "bgzzkh":"sfsfs"  //包裹周转筐号
-            }).then((response)=>{
-                // this.list=response.data;
-                console.log( 'response2==>', response)  //控制台检验输出api请求的数据
-            }).catch((error)=>{
-                console.log("请求数据失败==》", error);
-            })
-        },
+        //     Axios.post(api,{
+        //       "ordersn":"19012109163H0E9",
+        //       "shippingno":"111",  //物流单号    
+        //       "bgzzkh":"sfsfs"  //包裹周转筐号
+        //     }).then((response)=>{
+        //         // this.list=response.data;
+        //         console.log( 'response2==>', response)  //控制台检验输出api请求的数据
+        //     }).catch((error)=>{
+        //         console.log("请求数据失败==》", error);
+        //     })
+        // },
 
-        printBill(){
+        // printBill(){
                
-            // 4.1.根据物流单号查询所有对应订单信息   ordersn   
-            var api='http://116.62.112.118:8888/api/printBill';
+        //     // 4.1.根据物流单号查询所有对应订单信息   ordersn   
+        //     var api='http://116.62.112.118:8888/api/printBill';
           
-            Axios.post(api,{
-              ordersn:ordersn,
-              userid:userid
-            }).then((response)=>{
-                // this.list=response.data;
-                console.log( 'response3==>', response)  
-            }).catch((error)=>{
-                console.log("请求数据失败==》", error);
-            })
-        },
+        //     Axios.post(api,{
+        //       ordersn:ordersn,
+        //       userid:userid
+        //     }).then((response)=>{
+        //         // this.list=response.data;
+        //         console.log( 'response3==>', response)  
+        //     }).catch((error)=>{
+        //         console.log("请求数据失败==》", error);
+        //     })
+        // },
 
 
         /**
@@ -241,6 +267,8 @@ import Axios from 'axios';
           var that = this;
           // console.log("22");
 
+          console.log("物流单号查询==>", that.qry_shippingno);
+
           //调用数据库接口查询订单包裹信息
           qryOrderByShipno(that.qry_shippingno,res=>{
 
@@ -248,7 +276,6 @@ import Axios from 'axios';
 
             that.orderShipnoRef = res;   //res和res.data：输出时有可能是调试的关键点，输出的结果会不同。 
 
-            console.log("123456", that.qry_shippingno);
           });
         },
 
@@ -262,6 +289,12 @@ import Axios from 'axios';
           submitBgzzkh(ordersn,shippingno,bgzzkh,res=>{
 
             console.log("保存包裹所在周转筐号==》",res);
+
+            console.log("ordersn==》",ordersn);
+
+            console.log("shippingno==》",shippingno);
+
+            console.log("bgzzkh==》",bgzzkh);
 
             that.$message({
               message: '保存成功!',
@@ -277,13 +310,10 @@ import Axios from 'axios';
         *@userid   打印人
         */
         printBillBtn(ordersn,airway_bill){
+
           var that = this;
+
           ////从登陆session中获取用户id
-
-          console.log("ordersn==>",ordersn);
-
-          console.log("airway_bill==>",airway_bill);
-
           var userid = getSession("userid");
 
           console.log("userid==>",userid);
@@ -293,24 +323,33 @@ import Axios from 'axios';
           //数据库保存打印时间与
           printBill(ordersn,userid,res=>{
 
-            console.log("打印面单",res.data);
+            console.log("打印面单==》",res);
 
-            /*that.$message({
+            console.log("ordersn==>",ordersn);
+
+            console.log("airway_bill==>",airway_bill);
+
+            // 打印pdf功能 
+            window.location.href = airway_bill;
+
+            
+
+            that.$message({
               message: '打印面单成功!',
               type: 'success'
-            });*/
+            });
           });
         },
       
       },
 
       mounted(){  /*生命周期函数*/
-          this.qryOrderByShipno();  
-          this.submitBgzz();
-          this.printBill()
+          // this.qryOrderByShipno();  
+          // this.submitBgzz();
+          // this.printBill()
       }     
 
-    }
+}
 
 </script>
 

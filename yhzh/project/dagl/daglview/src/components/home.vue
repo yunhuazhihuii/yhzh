@@ -9,16 +9,48 @@
         <p>公告栏</p>
       </div>
       <div class="div2 bj">
-        
+        <ul>
+         <li v-for="(item,key) in noticelist"><a @click="look(key)" title="点击查看公告信息" href="javascript:;">{{item.bulletin_name}}</a> <span>{{item.bulletin_cretime}}</span></li>
+         <!-- <li><a href="javascript:;">元旦安排</a> <span>2018-12-28</span></li>
+         <li><a href="javascript:;">元旦假期安排哈哈</a> <span>2018-12-28</span></li> -->
+        </ul>
       </div>
+      <el-dialog
+          title="查看公告"
+          :visible.sync="dialogVisiblel"
+          width="40%"
+          :before-close="handleClose">
+          <el-form :model="form2">
+            <el-form-item label="公告标题:" :label-width="formLabelWidth">
+              <el-input v-model="form2.title" :disabled="true" autocomplete="off" size="small" style="width:50%"></el-input>
+            </el-form-item>
+            <el-form-item label="公告内容:" :label-width="formLabelWidth">
+              <el-input type="textarea" v-model="form2.desc" :disabled="true" :rows="10" style="width:88%"></el-input>
+            </el-form-item>
+          </el-form>
+         <!--  <span slot="footer" class="dialog-footer">
+            <el-button @click="dialogVisiblel = false">关 闭</el-button>
+            <el-button type="primary" @click="saveNoticel">发 布</el-button>
+          </span> -->
+        </el-dialog>
       <div class="div3 bj">
         <div class="div4">
-          <p>常用软件</p>
+          <p>常用工具</p>
+          <ul>
+           <li v-for="(item,key) in toollist"><a @click="tourl(key)" title="点击进入" href="javascript:;">{{item.tool_name}}</a> <span>{{item.tool_cretime}}</span></li>
+           <!-- <li><a href="javascript:;">元旦安排</a> <span>2018-12-28</span></li>
+           <li><a href="javascript:;">元旦假期安排哈哈</a> <span>2018-12-28</span></li> -->
+          </ul>
         </div>
       </div>
       <div class="div5 bj">
         <div class="div6">
           <p>代办事项</p>
+          <div class="dbsx">
+            <div>订单总数：{{totalOrder}}</div>
+            <div>未处理订单：{{unprocessedOrder}}  &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp  剩余时间<24小时：{{onedayOrder}} </div>
+            <div>店铺状态异常：{{abnormalShop}}</div>
+          </div> 
         </div>
       </div>
       <div class="div7 bj">
@@ -26,7 +58,7 @@
           <p>业绩</p>
         </div>
         <div>
-          <img src="../assets/images/Image 1.png" height="516" width="902" class="iamge1" alt="">
+          <div class="iamge1" id="chartmainbar" style="width:900px; height:550px;"></div>
         </div>
       </div>
       <div class="div9 bj">
@@ -42,39 +74,150 @@
 <script>
   import Axios from 'axios';
   import Header from './Header.vue';
+  import url from '../../config/sysAPI.config.js';
+  import {getSession} from '../common/js/util';
+  export default {   
+    components:{
+      'v-header':Header    
+    },
 
-    export default {   
-      components:{
-        'v-header':Header    
-      },
+    data () {  /*业务逻辑里面定义的数据*/
+      return {
+        userid: '',
+        totalOrder: '',
+        onedayOrder: '',
+        unprocessedOrder: '',
+        abnormalShop: '',
+        dialogVisiblel:false,
+        formLabelWidth: '120px',
+        form2:
+         {
+            id: '',
+            title: '',
+            desc: ''
+          },
+        name: '',
+        noticelist:[],
+        toollist:[],
+        list:[],
+        optionbar:{
+          title:{
+              text:'10天业绩树状图'
+          },
+          tooltip:{},
+          legend:{
+              data:['用户来源']
+          },
+          xAxis:{
+              data:["12-14","12-15","12-16","12-17","12-18","12-19","12-20","12-21","12-22","12-23"]
+          },
+          yAxis:{
 
-      data () {  /*业务逻辑里面定义的数据*/
-        return {
-          msg: '你好vue',
-          list:[]
+          },
+          series:[{
+              name:'订单金额',
+              type:'bar', //设置图表主题
+              data:[500,200,360,100,200,400,200,300,300,100]
+          }]
         }
-      },
-      methods:{
-        getData(){
-          //请求数据
-          Axios({
-            url:'https://partner.uat.shopeemobile.com/api/v1/item/categories',
-            method:'post'
-          })
-          .then((response)=>{
-            console.log(response);
-            this.list=response.data.result;
-          })
-          .catch((error)=>{
-            console.log(error);
-          })
-        }
-      },
-      mounted(){
-        //生命周期函数，页面一加载就可以请求数据
-        this.getData();
       }
+    },
+
+    methods:{
+     handleClose(done) {
+        this.$confirm('确认关闭？')
+          .then(_ => {
+            done();
+          })
+          .catch(_ => {});
+      },
+
+      drawLine: function(){
+        //基于准本好的DOM，初始化echarts实例
+        let chartmainbar = this.$echarts.init(document.getElementById("chartmainbar"));
+        //绘制图表
+        chartmainbar.setOption(this.optionbar);
+      },
+      getnoticelist(){
+        var api = url.getBulletinList;
+        var _this = this
+        Axios.post(api,
+          {
+
+          }
+        )
+        .then((response)=>{
+          console.log(response.data);
+          _this.noticelist=response.data;
+
+        })
+        .catch((error)=>{
+          console.log(error);
+        })
+      },
+
+      gettoollist(){
+        var api = url.getToolList;
+        var _this = this
+        Axios.post(api,
+          {
+
+          }
+        )
+        .then((response)=>{
+          console.log(response.data);
+          _this.toollist=response.data;
+        })
+        .catch((error)=>{
+          console.log(error);
+        })
+      },
+      tourl(key){
+        var that = this
+        var url = that.toollist[key].tool_content
+        window.open (url,'_blank')
+      },
+      look(key){
+        this.dialogVisiblel = true
+        console.log(this.noticelist[key])
+        this.form2.title=this.noticelist[key].bulletin_name
+        this.form2.desc=this.noticelist[key].bulletin_content
+
+      },
+      gettolist(){
+        var api = url.todoList;
+        var _this = this
+        var id = _this.userid
+        Axios.post(api,
+          {
+            userid:id
+          }
+        )
+        .then((response)=>{
+          console.log(response.data);
+          // _this.toollist=response.data;
+          _this.totalOrder = response.data.totalOrder
+          _this.onedayOrder = response.data.onedayOrder
+          _this.unprocessedOrder = response.data.unprocessedOrder
+          _this.abnormalShop = response.data.abnormalShop
+        })
+        .catch((error)=>{
+          console.log(error);
+        })
+      }
+    },
+
+    //生命周期函数，页面一加载就可以请求数据
+    mounted(){
+      //获取存储额user_id
+      this.userid = getSession("user_id");
+      this.drawLine()
+      this.getnoticelist()
+      this.gettoollist()
+      this.gettolist()
     }
+  }
+
 </script>
 
 
@@ -141,7 +284,32 @@
     left: 15px;
     height: 170px;
     width: 300px;
+    overflow: auto;
   }
+
+  ul {
+    list-style-type: none;
+    margin-top: 8px;
+    margin-left: 14px;
+    margin-right: 14px;
+  }
+   ul li {
+    margin-top: 5px;
+    width: 250px;
+    list-style-position: inside;
+    color: #76A3A3;
+    border-bottom: 1px dashed #F2F2F2;
+  }
+   ul li a{
+    display: inline-block;
+    width: 150px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: #76A3A3;
+    text-decoration: none;
+  }
+
   .div3 {
     position: absolute;
     top: 260px;
@@ -246,4 +414,13 @@
     font-size: 13px;
   }
 
+  .dbsx {
+    margin-top: 20px;
+    margin-left: 33px;
+  }
+  .dbsx div{
+    margin-top: 20px;
+    font-size: 16px;
+    color: #333333
+  }
 </style>

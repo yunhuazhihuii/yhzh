@@ -18,7 +18,7 @@
       data(){
           return {
             dqwz: "交易管理>24小时到期订单", //当前位置
-            orderStatus: "READY_TO_SHIP"  //订单状态： 待处理
+            orderStatus: "READY_TO_SHIP"  //订单状态： 24小时到期订单
           }
       },
 

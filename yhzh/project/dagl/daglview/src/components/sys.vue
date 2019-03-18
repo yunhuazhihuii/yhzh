@@ -1,7 +1,7 @@
 <template>
   <div>  
     <!-- 导航栏 -->
-    <div class="head">
+    <!-- <div class="head">
       <div class="nav">
         <ul>
           <router-link to="/home">
@@ -20,23 +20,26 @@
       </div>
       <div class="user">  
       </div>
-    </div>
+    </div> -->
+
+    <v-header></v-header>
 
     <div class="content">
       <div class="aside bj">
         <ul id="aside">
-          <li class="other">系统管理</li>
+          <li class="other"><p>系统管理</p></li>
           <li><a href=""><router-link to="/sys/shopping"><p>店铺列表管理</p></router-link></a>
           </li>
           <li><a href=""><router-link to="/sys/Purchase"><p>采购账号管理</p></router-link></a>
           </li>
           <li><a href=""><router-link to="/sys/CompanyInformation"><p>公司信息管理</p></router-link></a>
           </li>
-          <li class="other">子账号管理</li>
+          <li class="other"><p>子账号管理</p></li>
           <li><a href=""><router-link to="/sys/role"><p>角色管理</p></router-link></a></li>
           <li><a href=""><router-link to="/sys/staff"><p>员工管理</p></router-link></a></li>
-          <li class="other">主页管理</li>
-          <li><a href=""><router-link to="/sys/mainsys"><p>主页</p></router-link></a></li>
+          <li class="other"><p>主页管理</p></li>
+          <li><a href=""><router-link to="/sys/notice"><p>发布公告管理</p></router-link></a></li>
+          <li><a href=""><router-link to="/sys/tool"><p>常用工具管理</p></router-link></a></li>
         </ul>
       </div>
       <div class="order-right">
@@ -48,14 +51,22 @@
 </template>
 
 <script>
-    export default {     
-      data () {  /*业务逻辑里面定义的数据*/
-        return {
-          msg: '你好vue',
 
-        }
-      }
+import Header from './Header.vue';
+
+export default { 
+
+  components:{
+    'v-header':Header 
+  }, 
+
+  data () {  /*业务逻辑里面定义的数据*/
+    return {
+      msg: '你好vue',
+
     }
+  }
+}
 </script>
 
 <style scoped>
@@ -97,7 +108,7 @@
     height: 100%;
   }
   .aside {
-    height: 400px;
+    height: 450px;
     width: 180px;
     background-color: #fff;
     position:absolute;
@@ -115,7 +126,7 @@
     flex-wrap: nowrap;
     list-style: none;
     width: 100%;
-    height: 40px;
+    height: 60px;
     border-bottom: 1px solid #CCCCCC;
   }
   #aside li a {
@@ -123,7 +134,7 @@
     color: #333333;
     display: block;
     width: 100%;
-    height: 42.86px;
+    height: 43.57px;
     /* height: 100%; */
     text-align: center;
     /* margin-top: 8px; */
@@ -136,6 +147,11 @@
     background-color: #F2F2F2;
     /* padding-top: 5px; */
   }
+
+.other p {
+    margin-top: 10px;
+  }
+
   .router-link-active {
     background-color: #76A3A3;
   }

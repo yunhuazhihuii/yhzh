@@ -18,7 +18,7 @@
       data(){
           return {
             dqwz: "交易管理>全部订单", //当前位置
-            orderStatus: "READY_TO_SHIP"  //订单状态： 待处理
+            orderStatus: "all"  //订单状态： 待处理
           }
       },
 

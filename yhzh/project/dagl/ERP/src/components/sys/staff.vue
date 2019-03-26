@@ -10,7 +10,7 @@
               <el-row class="elrow">
                   <el-button class="elbutton" size="small" @click="gostaffadd">添加</el-button>
                   <el-button class="elbutton" size="small">修改</el-button>
-                  <el-button class="elbutton" size="small">删除</el-button>
+                 <el-button class="elbutton" size="small" @click="delStaff">删除</el-button>
                   
               </el-row>
           </div> 
@@ -25,6 +25,7 @@
               :data="tableData.slice((currentPage - 1) * pagesize, currentPage * pagesize)"
               border
               :header-cell-style="{background:'#F2F2F2'}"
+		@selection-change="handleSelectionChange"
               style="width: 100%"
               >
               <el-table-column
@@ -32,8 +33,8 @@
                 width="50">
               </el-table-column>
               <el-table-column
-                prop="userid"
-                label="员工ID"
+                prop="userenname"
+                label="员工登录账号"
                 align="center"
                 width="150">
               </el-table-column>
@@ -102,6 +103,7 @@ import {getSession} from '../../common/js/util';
     export default{
         data(){
             return {    
+	      multipleSelection:[],
               userid:'',           
               tableData: [],
               currentPage:1,
@@ -117,6 +119,11 @@ import {getSession} from '../../common/js/util';
           },
           gostaffadd(){
             this.$router.push({path:'/sys/staffadd'})
+          },
+	  handleSelectionChange(val) {
+            console.log(val)
+            this.multipleSelection = val
+          
           },
           getStaffList(){
             //请求数据
@@ -135,7 +142,51 @@ import {getSession} from '../../common/js/util';
             .catch((error)=>{
               console.log(error);
             })
-          }
+	  },
+	  delStaff(){    
+	   var _this = this
+              
+              var userid = this.multipleSelection[0].userid
+              // window.alert("群定")
+              this.$confirm('确认删除这条记录吗?', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+              }).then((action) => {
+                if(action==='confirm'){
+                    // console.log("6666666666669999999999999")
+                    var api = url.delStaff
+                    Axios.post(api,
+                      {
+                        userid:userid,
+                        
+                      }
+                    )         
+                    .then((response)=>{
+                      console.log(response);
+                      // _this.dialogVisiblec=false
+                      // _this.tableData=response.data;
+                         this.$message({
+                          type: 'success',
+                          message: '删除成功!'
+                        });
+                        // location.reload()
+                        _this.getStaffList()
+                    })
+                    .catch((error)=>{
+                      console.log(error);
+                    })
+
+                 
+                }
+              
+              }).catch(() => {
+                this.$message({
+                  type: 'info',
+                  message: '已取消删除'
+                });          
+              });
+          },
         },
         mounted(){
           this.userid = getSession("user_id");

@@ -7,12 +7,14 @@ import VueRouter from 'vue-router';
 Vue.use(VueRouter);
 
 import axios from 'axios';
-
 window.axios = require('axios');
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest'
 Vue.prototype.$http = window.axios
 
-import Print from 'vue-print-nb'
+import Vuex from 'vuex';
+Vue.use(Vuex);
+
+import Print from 'vue-print-nb';
 Vue.use(Print); //注册
 
 
@@ -79,8 +81,15 @@ import 'element-ui/lib/theme-chalk/index.css';
 Vue.use(ElementUI);
 
 const routes = [
-	{ path: '/home', component: Home },
+	{ path: '/home', 
+		component: Home,
+		meta: {
+            requireAuth: true,   //将home页设置为需要登录验证
+        }, 
+    },
+
 	{ path: '/login', component: Login },
+
 	{ 
 		path: '/order', 
 		component: Order,
@@ -108,11 +117,6 @@ const routes = [
 			
 			{   path: 'check', 
 				component: check
-				/*children:[
-					{ path: 'package_news', component: package_news },
-					{ path: 'packagenewone', component: packagenewone },
-					{ path: 'packagenewtwo', component: packagenewtwo }
-				]*/
 
 			 },
 			{ path: 'Alreadyprinted', component: Alreadyprinted },
@@ -144,6 +148,34 @@ const routes = [
 
 	{ path: '*', redirect: '/login' }   /*默认跳转路由*/
 ]
+
+
+// routes.beforeEach((to,from,next)=>{
+// 	console.log("123456")
+// } )
+
+// 页面刷新时，重新赋值token
+// if (window.localStorage.getItem('token')) {
+//     store.commit(types.LOGIN, window.localStorage.getItem('token'))
+// }
+
+
+// routes.beforeEach((to, from, next) => {
+//     if (to.meta.requireAuth) {  // 判断该路由是否需要登录权限
+//         if (localStorage.ruleForm2) {  // 通过vuex state获取当前的token是否存在
+//             next();
+//         }
+//         else {
+//             next({
+//                 path: '/login',
+//                 query: {redirect: to.fullPath}  // 将跳转的路由path作为参数，登录成功后跳转到该路由
+//             })
+//         }
+//     }
+//     else {
+//         next();
+//     }
+// })
 
 const router = new  VueRouter({
 	mode: 'history',

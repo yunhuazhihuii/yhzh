@@ -47,48 +47,46 @@
             }
         },
         mounted() {
-
-            // if(!($.setSession('userIsLogin')=='true')){
-            //   //如果用户并未登录 直接跳转到登录界面
-            //   this.$router.push('/login')
-            // }
           
         },
         methods: {
              handleSubmit2() {
                 // this.$router.push('/home');
                 var _this = this;
-
                 this.$refs.ruleForm2.validate((valid) => {
+                  if (valid) {
+                    _this.logining = true;
+                    // var loginUser = { userid: _this.ruleForm2.account, password: _this.ruleForm2.checkPass };
+                    var userid = _this.ruleForm2.account
+                    var password = _this.ruleForm2.checkPass
+                    console.log(userid+"--------"+password)
 
-                    if (valid) {
-                        _this.logining = true;
-                        // var loginUser = { userid: _this.ruleForm2.account, password: _this.ruleForm2.checkPass };
-                        var userid = _this.ruleForm2.account
-                        var password = _this.ruleForm2.checkPass
-                        console.log(userid+"--------"+password)
-
-                        // 存储登录session
-                        userLoginInfo(userid,password,res=>{
-                                // console.log(loginUser+"888888888888888888888")
-                                console.log(res)
-                              if(res.recode==0){
-                                // 用户信息
-                                // setSession('UserInfo',res.data[0]);
-                                // 用户名字
-                                // setSession('name',res.data.roleid);
-                                // setSession('shop_id',res.data.shop_id);
-                                setSession('user_id',res.userid);
-                                setSession('shop_id',res.shop_id);
-                               _this.$router.push({ path: '/home' });
-                              }else{
-                                _this.logining=false
-                                _this.$message.error('用户名或密码错误');
-                              }
-                        })
-                          // 本地保存用户名
-                          // _this.$store.commit('sessionName', _this.ruleForm2.account);
-                    } 
+                    // 存储登录session
+                    userLoginInfo(userid,password,res=>{
+                            // console.log(loginUser+"888888888888888888888")
+                            console.log(res)
+                          if(res.recode==0){
+                            // 用户信息
+                            // setSession('UserInfo',res.data[0]);
+                            // 用户名字
+                            // setSession('name',res.data.roleid);
+                            // setSession('shop_id',res.data.shop_id);
+                            setSession('user_id',res.userid);
+                            setSession('user_name',res.userenname);
+                            setSession('shop_id',res.shop_id);
+                            setSession('home_role',res.homerole);
+                            setSession('order_role',res.orderrole);
+                            setSession('ck_role',res.ckrole);
+                            setSession('sys_role',res.sysrole);
+                           _this.$router.push({ path: '/home' });
+                          }else{
+                            _this.logining=false
+                            _this.$message.error('用户名或密码错误');
+                          }
+                      })
+                      // 本地保存用户名
+                      // _this.$store.commit('sessionName', _this.ruleForm2.account);
+                     } 
                 });
               }
         

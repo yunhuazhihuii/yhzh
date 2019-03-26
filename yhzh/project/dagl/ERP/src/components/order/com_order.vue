@@ -82,7 +82,6 @@
             placeholder="选择日期时间"
             format="yyyy年MM月dd日 HH小时mm分ss秒"
             value-format="yyyy-MM-dd HH:mm:ss"
-  
             >
           </el-date-picker>
 
@@ -817,13 +816,16 @@ import XLSX from 'xlsx'
 
         //移至待处理
         zhuanyigetRECEIVED(){
-          console.log("asdfe---");
+            console.log("asdfe---");
 
-         var ordersnT = '';
+            var ordersnT = '';
 
+             //遍历表格里的数据
             for(var i=0;i<this.tableData.length;i++){
 
+              //如果被选中的项
               if(this.tableData[i].checked == true){
+
 
                 ordersnT += this.tableData[i].ordersn +',';
 
@@ -837,6 +839,7 @@ import XLSX from 'xlsx'
                 this.$message.warning("请先选择订单 ");
                 return ;
               }else{
+                // substring：截取字符串
                 ordersnT = ordersnT.substring(0,ordersnT.length-1);
                 console.log("截取后的订单编号",ordersnT);
 

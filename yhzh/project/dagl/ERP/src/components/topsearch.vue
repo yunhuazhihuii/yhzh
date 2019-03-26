@@ -235,42 +235,8 @@ import Axios from 'axios';
 
     methods:{
 
-      getUserShop(){
-        var api='http://116.62.112.118:8888/api/getUserShop';
-        var userid = this.userid
-        // console.log(userid+"888")
-          Axios.post(api,{
-            userid:userid
-          }).then((response)=>{
-            console.log( 'response1==>', response)  
-            this.options3 = response.data
-            console.log(this.options3)
-          }).catch((error)=>{
-            console.log("请求数据失败==》", error);
-          })
-      },
-
-      // 获取待处理订单接口
-        getData(shopId,createTime1,createTime2,orderStatus,searchType,searchCode,pageIndex,pageCount){
-
-            var api='http://116.62.112.118:8888/api/getPendingOrders';
-
-                Axios.post(api,{
-                    shopId: shopId,//店铺id
-                    createTime1: createTime1,//订单时间 从
-                    createTime2: createTime2,//订单时间 到
-                    orderStatus: orderStatus,//订单状态
-                    searchType: searchType,//精确搜索类型
-                    searchCode: searchCode,//精确搜索代码
-                    pageIndex: pageIndex,//页码
-                    pageCount: pageCount //每页显示条数
-                }).then((response)=>{
-                  this.tableData1=response.data;
-                  console.log( 'response1==>', response)  
-                }).catch((error)=>{
-                  console.log("请求数据失败==》", error);
-                })
-        },
+      
+      
 
       /*查询订单信息*/
        qryOrderList(shopId,createTime1,createTime2,orderStatus,searchType,searchCode,pageIndex,pageCount){
@@ -318,26 +284,7 @@ import Axios from 'axios';
 
     computed:{
 
-        // 搜索框
-        list: function(){
-            var _this = this;
-
-            //逻辑-->根据input的value值筛选listtitle中的数据
-            
-            var arrByZM = [];//声明一个空数组来存放数据
-            for (var i=0;i<_this.listtitle.length;i++){
-
-              //for循环数据中的每一项（根据name值）
-              if(this.listtitle[i].searchNO.search(this.searchVal) != -1){
-
-                //判断输入框中的值是否可以匹配到数据，如果匹配成功
-                arrByZM.push(this.listtitle[i]);
-                //向空数组中添加数据
-              }
-            }
-            //一定要记得返回筛选后的数据
-            return arrByZM;
-        }
+       
     }
 }
 

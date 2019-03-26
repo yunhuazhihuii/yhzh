@@ -2,18 +2,27 @@
 	<el-header>
       <div class="nav">
         <ul>
-          <router-link to="/home">
-            <li><a href="">首页</a></li>
-          </router-link>
-          <router-link to="/order/pendingorder">
-            <li><a href="">交易管理</a></li>
-          </router-link>
-          <router-link to="/storehouse/check">
-            <li><a href="">仓库管理</a></li>
-          </router-link>
-          <router-link to="/sys/shopping">
-            <li><a href="">系统管理</a></li>
-          </router-link>
+
+           <template v-if="home_roles.length == 4">  
+             <router-link to="/home">
+              <li><a href="">首页</a></li>
+            </router-link>
+          </template>
+          <template v-if="order_roles.length == 14">  
+            <router-link to="/order/pendingorder">
+              <li><a href="">交易管理</a></li>
+            </router-link>
+           </template>
+          <template v-if="ck_roles.length == 5">  
+            <router-link to="/storehouse/check">
+              <li><a href="">仓库管理</a></li>
+            </router-link>
+           </template>
+          <template v-if="sys_roles.length == 7">  
+            <router-link to="/sys/shopping">
+              <li><a href="">系统管理</a></li>
+            </router-link>
+           </template>
           
         </ul>
       </div>
@@ -21,7 +30,7 @@
       <div class="user">
         <el-col class="userinfo" style="width: 850px">
             <el-dropdown trigger="hover">
-              <span class="el-dropdown-link userinfo-inner"><img src="../assets/images/user1.png" /> {{userid}}
+              <span class="el-dropdown-link userinfo-inner"><img src="../assets/images/user1.png" /> {{user_name}}
               </span>
               <el-dropdown-menu slot="dropdown">
                 <!-- <el-dropdown-item>我的消息</el-dropdown-item>
@@ -43,15 +52,37 @@
     data(){
       return {
           userid:'',
-          shopid:[]
+          user_name:'',
+          shopid:[],
+          home_role:'',
+          home_roles:[],
+          order_role:'',
+          order_roles:[],
+          ck_role:'',
+          ck_roles:[],
+          sys_role:'',
+          sys_roles:[],
+
+
       }
     },
     created(){
         // var that = this;
         this.userid = getSession('user_id')
+        this.user_name = getSession('user_name')
         this.shopid = getSession('shop_id')
+        this.home_role = getSession('home_role')
+        this.order_role = getSession('order_role')
+        this.ck_role = getSession('ck_role')
+        this.sys_role = getSession('sys_role')
         console.log(this.userid+'--------88888')
         console.log(this.shopid+"-------99999")
+        console.log(this.home_role+'主页的权限')
+        console.log(this.home_role.length)
+        console.log(this.order_role+'订单的权限')
+        console.log(this.ck_role+'仓库的权限')
+        console.log(this.sys_role+'系统的权限')
+        this.quanxian()
 
       },
     methods: {
@@ -68,6 +99,15 @@
 
         });
       },
+      quanxian(){
+       this.home_roles = this.home_role.split(',')
+       this.order_roles = this.order_role.split(',')
+       this.ck_roles = this.ck_role.split(',')
+       this.sys_roles = this.sys_role.split(',')
+        console.log(this.home_roles instanceof Array);
+        console.log(this.home_roles.length)
+
+      }
 
     }
 

@@ -10,7 +10,7 @@
               <el-row class="elrow">
                   <el-button class="elbutton" size="small" @click="goroleadd">添加</el-button>
                   <el-button class="elbutton" size="small">修改</el-button>
-                  <el-button class="elbutton" size="small">删除</el-button>
+                  <el-button class="elbutton" size="small" @click="delrole">删除</el-button>
                   
               </el-row>
           </div> 
@@ -38,12 +38,12 @@
                 align="center"
                 width="150">
               </el-table-column>
-              <el-table-column
+            <!--   <el-table-column
                 prop="roleauth"
                 label="角色权限"
                 width="200"
                 align="center">
-              </el-table-column>
+              </el-table-column> -->
               <el-table-column
                 prop="roledesc"
                 label="角色描述"
@@ -147,7 +147,53 @@ import {getSession} from '../../common/js/util';
             .catch((error)=>{
               console.log(error);
             })
-          }
+          },
+
+          delrole(){
+             var _this = this
+              
+              var roleid = this.multipleSelection[0].roleid
+              // window.alert("群定")
+              this.$confirm('确认删除这条记录吗?', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+              }).then((action) => {
+                if(action==='confirm'){
+                    // console.log("6666666666669999999999999")
+                    var api = url.delRole
+                    Axios.post(api,
+                      {
+                        userid:_this.userid,
+                        roleid:roleid,
+                        
+                      }
+                    )
+                    .then((response)=>{
+                      console.log(response);
+                      // _this.dialogVisiblec=false
+                      // _this.tableData=response.data;
+                         this.$message({
+                          type: 'success',
+                          message: '删除成功!'
+                        });
+                        // location.reload()
+                        _this.getRoleList()
+                    })
+                    .catch((error)=>{
+                      console.log(error);
+                    })
+
+                 
+                }
+              
+              }).catch(() => {
+                this.$message({
+                  type: 'info',
+                  message: '已取消删除'
+                });          
+              });
+          },
         },
         mounted(){
           this.getRoleList();

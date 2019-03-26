@@ -28,6 +28,8 @@ const URL = {
 	addShop:BASEURL+'addShop',
 	delShop:BASEURL+'delShop',
 	associateShop:BASEURL+'associateShop',
+	getShopLike:BASEURL+'getShopLike',
+	VerifyShop:BASEURL+'VerifyShop',
 	// 采购账号管理API
 	getPurinfo:BASEURL+'getPurinfo',
 	addPurinfo:BASEURL+'addPurinfo',
@@ -40,9 +42,11 @@ const URL = {
 	// 角色管理API
 	getRoleList:BASEURL+'getRoleList',
 	addRole:BASEURL+'addRole',
+	delRole:BASEURL+'delRole',
 	// 员工管理API
 	getStaffList:BASEURL+'getStaffList',
 	addStaff:BASEURL+'addStaff',
+	delStaff:BASEURL+'delStaff',
 
 	// 公告管理API
 	getBulletinList:BASEURL+'getBulletinList',

@@ -114,12 +114,12 @@
                       
 
                       
-                      <template v-if="pkg.bgzzkh == '' && pkg.shippingno == qry_shippingno">
+                      <template v-if="pkg.bgzzkh != '' && pkg.shippingno == qry_shippingno">
                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;该包裹已扫描，存入周转筐：
                           <span class="numtext">{{pkg.bgzzkh}}</span>
                       </template>
                       
-                      <template  v-if="pkg.bgzzkh != ''">
+                      <template  v-if="pkg.bgzzkh == ''">
                         
                         <template v-if="pkg.reciorder == order.packages.length">
                           <el-button type="primary" size="mini" @click="printBillBtn(order.ordersn,order.airway_bill)" class="btn_dymd">打印面单</el-button>
@@ -164,28 +164,6 @@ import {qryOrderByShipno} from '../../service/getData.js';
 
 import {getSession} from '../../common/js/util';
 import {submitBgzzkh,printBill} from '../../service/getData.js';
-
-// import $ from 'expose?$!jquery';
-
- 
-
-// $(document).ready(function(){
-    
-//     $("#printIframe").load(function(){//等待iframe加载完成后再执行doPrint.每次iframe设置src之后都会重新执行这部分代码。
-//         doPrint();
-//     });
-   
-// });
-
-
-//点击打印按钮，触发事件
-// function printPDF(){
-//     var src = $("#printIframe").attr("src");
-//     if(!src){//当src为空，即第一次加载时才赋值，如果是需要动态生成的话，那么条件要稍稍变化一下
-//                 $("#printIframe").attr("src","./attachment/Images.pdf");//暂时静态PDF文件
-//     }else
-//         $("#printIframe")[0].contentWindow.print();//不知为什么在IE中一直无法打印文件
-// }
 
 export default{
 

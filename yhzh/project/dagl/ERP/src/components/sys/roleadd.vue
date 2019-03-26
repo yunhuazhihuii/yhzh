@@ -189,6 +189,7 @@
             )
             .then((response)=>{
               console.log(response)
+		that.$router.push({ path: '/sys/role' });
               // that.dialogVisible = false;
               // that.getBulletinList()
             })

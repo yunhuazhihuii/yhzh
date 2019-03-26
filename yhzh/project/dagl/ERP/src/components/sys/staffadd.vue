@@ -7,7 +7,7 @@
        <div class="content">
            <div class="content-top">
                <el-form :model="form" class="roleform">
-                <el-form-item label="员工ID:" :label-width="formLabelWidth">
+                <el-form-item label="员工登录名:" :label-width="formLabelWidth">
                   <el-input v-model="form.userid" autocomplete="off" size="small" style="width:30%"></el-input>
                 </el-form-item>
                 <el-form-item label="员工密码:" :label-width="formLabelWidth">
@@ -50,7 +50,7 @@
                       </el-option>
                   </el-select>
                   &nbsp&nbsp
-                  <el-button class="serbutton" type="primary" size="small" icon="el-icon-search">筛选</el-button>
+                  <el-button class="serbutton" type="primary" @click="shaixuan" size="small" icon="el-icon-search">筛选</el-button>
                   </template>
               </div>
             
@@ -65,9 +65,14 @@
                 @selection-change="handleSelectionChange"
                 style="width: 1101px"
                 >
-                <el-table-column
-                  type="selection"
-                  width="50">
+                <el-table-column width="50">
+                   <template slot-scope="scope">
+                     <el-checkbox v-model="tableData[scope.$index+pagesize*(currentPage-1)].checked" ></el-checkbox>
+                  </template>
+
+                  <!-- <template slot-scope="scope">
+                     <el-checkbox @change="abc(scope.$index+pagesize*(currentPage-1))"  ></el-checkbox>
+                  </template> -->
                 </el-table-column>
                 <el-table-column
                   prop="shop_name"
@@ -153,7 +158,9 @@
     import {getSession} from '../../common/js/util';
     export default{
         data(){
-            return {  
+            return { 
+                shopids:[],
+               checked:false, 
                value:'', 
                userid:'', 
                roleid:'', 
@@ -167,8 +174,10 @@
               },
                tableData: [],
                multipleSelection: [],
+               multipleSelectionAll: [], // 所有选中的数据包含跨页数据
+               idKey: "personId", // 标识列表数据中每一行的唯一键的名称(需要按自己的数据改一下)
                currentPage:1,
-              pagesize:2,
+              pagesize:8,
               complist:[],
               rolelist:[],
               radio: '',
@@ -179,18 +188,21 @@
             }
         },
         methods:{
-
+ 
           handleSelectionChange(val) {
             console.log(val)
             this.multipleSelection = val
-         
+            
           },
            //改变时
            handleSizeChange(val) {
+           
                 this.pagesize = val;
+               
            },
             //条目改变时
            handleCurrentChange(val) {
+           
                 this.currentPage = val;
            },
            // 选中角色获取选中角色的id
@@ -203,6 +215,10 @@
             console.log(value)
             this.compid=value
            },
+
+           // currentSel(){
+           //  console.log('98')
+           // },
           getCompList(){
             
             //请求数据
@@ -223,21 +239,32 @@
             })
           },
 
+          getshopid(){
+            
+          },
           getShoplist(){
-
+            // var ordersnT = '';
             //请求数据
             var api = url.getShopList;
             var _this = this
             Axios.post(api,
               {
                 userid:_this.userid
+
               }
             )
             .then((response)=>{
               console.log(response.data);
               _this.tableData=response.data;
 
+              for(var i=0;i<_this.tableData.length;i++){
+                _this.tableData[i].checked = false;
 
+                // if(_this.tableData[i].checked == true){
+                //   ordersnT += this.tableData[i].shop_id +',';
+                //   console.log(ordersnT +'++++++++++++++ordersnT');
+                // }
+              }
             })
             .catch((error)=>{
               console.log('54545')
@@ -245,6 +272,28 @@
             })
           },
 
+          shaixuan(){
+            console.log(this.value)
+
+            var api = url.getShopList;
+            var _this = this
+            Axios.post(api,
+              {
+                userid:_this.userid,
+                compid:_this.value
+              }
+            )
+            .then((response)=>{
+              console.log(response.data);
+              _this.tableData=response.data;
+
+            })
+            .catch((error)=>{
+              console.log(error);
+            })
+
+
+          },
           getRoleList(){
             //请求数据
             var api = url.getRoleList;
@@ -267,9 +316,19 @@
 
 
           saveNotice(){
-            console.log('89898898989')
+
+            var shopid = ''
+            // console.log('89898898989')
             var that = this;
             var api = url.addStaff;
+
+
+            for(var i=0;i<that.tableData.length;i++){
+              if(this.tableData[i].checked == true){
+                shopid += this.tableData[i].shop_id +',';
+                console.log(shopid)
+              }
+            }
             Axios.post(api,
               {
                 userenname:that.form.userid,
@@ -280,12 +339,13 @@
                 roleid:that.roleid,
                 c_userid:that.userid,
                 compid:that.compid,
-                shop_id:'111,222,333'
+                shop_id:shopid
                 
               }
             )
             .then((response)=>{
               console.log(response)
+              that.$router.push({ path: '/sys/staff' });
               // that.dialogVisible = false;
               // that.getBulletinList()
             })

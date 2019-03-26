@@ -136,12 +136,12 @@
                   <el-button class="elbutton" size="small" @click="expor">导出</el-button>
               </el-row>
           </div>
-          <el-select class="select" size="small"  placeholder="请选择">
+          <el-select v-model="value1" class="select" size="small"  placeholder="请选择">
             <el-option
-              v-for="item in options"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value">
+              v-for="item in complist"
+              :key="item.compid"
+              :label="item.compname"
+              :value="item.compid">
             </el-option>
 
             <el-option
@@ -149,7 +149,7 @@
             </el-option>
           </el-select>  
            
-          <el-button class="selectbutton" size="small">筛选</el-button>
+          <el-button class="selectbutton" @click="shaixuan" size="small">筛选</el-button>
                  
               
           
@@ -223,7 +223,7 @@
                     <el-button
                       size="mini"
                       type="danger"
-                      @click="handleDelete(scope.$index, scope.row)">检查</el-button>
+                      @click="handlecheck">检查</el-button>
                 </template>
               </el-table-column>
             </el-table>
@@ -257,6 +257,7 @@ import {getSession} from '../../common/js/util';
     export default{
         data(){
             return { 
+              value1:'',
               // shoplist:[],
               userid:'',
               multipleSelection:[],
@@ -350,25 +351,49 @@ import {getSession} from '../../common/js/util';
             })
           },
           // 条件查询搜索
-          // serchshop(){
-            // var api = url.getCompList;
-            // var _this = this
-            // Axios.post(api,
-            //   {
-            //     userid:_this.userid,
-            //     searchcontent:searchcontent
-            //   }
-            // )
-            // .then((response)=>{
-            //   console.log(response.data);
-            //   this.complist=response.data
+          serchshop(){
+            console.log('89')
+            var api = url.getShopLike;
+            var _this = this
+            Axios.post(api,
+              {
+                userid:_this.userid,
+                shop_name:_this.searchcontent
+              }
+            )
+            .then((response)=>{
+              console.log(response.data);
+              _this.tableData=response.data
 
-            // })
-            // .catch((error)=>{
-            //   console.log(error);
-            // })
+            })
+            .catch((error)=>{
+              console.log(error);
+            })
 
-          // },
+          },
+          // 筛选公司
+          shaixuan(){
+            // console.log(this.value1)
+
+            var api = url.getShopList;
+            var _this = this
+            Axios.post(api,
+              {
+                userid:_this.userid,
+                compid:_this.value1
+              }
+            )
+            .then((response)=>{
+              console.log(response.data);
+              _this.tableData=response.data;
+
+            })
+            .catch((error)=>{
+              console.log(error);
+            })
+
+
+          },
            handleSelectionChange(val) {
             // console.log(val[0].country)
             // this.form1.country=val[0].country
@@ -486,6 +511,41 @@ import {getSession} from '../../common/js/util';
               // .catch((error)=>{
               //   console.log(error);
               // })
+
+          },
+          handlecheck(){
+          
+            var api = url.VerifyShop;
+            var _this = this
+
+            var shop_id = _this.multipleSelection[0].shop_id
+            
+              Axios.post(api,
+                {
+                  
+                  shop_id:shop_id
+                 
+                }
+              )
+              .then((response)=>{
+                console.log(response);
+                if(response.data.recode == 0){
+                  this.$message({
+                    type: 'success',
+                    message: '店铺参数正常!'
+                  });
+                }else{
+                  this.$message({
+                    type: 'error',
+                    message: '店铺参数异常!'
+                  });
+                }
+
+              })
+              .catch((error)=>{
+                console.log(error);
+              })
+
 
           },
           saveNoticec(){

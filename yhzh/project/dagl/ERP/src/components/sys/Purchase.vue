@@ -15,6 +15,7 @@
               </el-row>
           </div> 
 
+          <!-- 新增数据 -->
            <el-dialog
             title="新增数据"
             :visible.sync="dialogVisible"
@@ -31,6 +32,7 @@
             </span>
           </el-dialog>   
 
+          <!-- 修改数据 -->
           <el-dialog
             title="修改数据"
             :visible.sync="dialogVisiblec"
@@ -48,11 +50,13 @@
           </el-dialog> 
                  
               
-          
+          <!-- 搜索框 -->
           <el-input class="elinput" size="small" placeholder="淘宝账号"></el-input>
-            &nbsp&nbsp&nbsp
+            &nbsp;&nbsp;&nbsp;
           <el-button class="serbutton" type="primary" size="small" icon="el-icon-search"></el-button> 
+          
           <div class="shoplist">
+
             <el-table
               :data="tableData.slice((currentPage - 1) * pagesize, currentPage * pagesize)"
               border
@@ -61,11 +65,13 @@
               @selection-change="handleSelectionChange"
               style="width: 100%"
               >
+
               <el-table-column
                 type="selection"
                 label="序号"
                 width="50">
               </el-table-column>
+
               <el-table-column
                 prop="tb_code"
                 label="采购账号"
@@ -164,6 +170,7 @@ import url from '../../../config/sysAPI.config.js';
           
           },
 
+          // 查 询 
           getPurinfo(){
 
             //请求数据
@@ -186,14 +193,14 @@ import url from '../../../config/sysAPI.config.js';
           },
           // 添加账号
           saveNotice(){
+
             var api = url.addPurinfo;
             var _this = this
-           
+          
             Axios.post(api,
               {
                 tb_id:'',
                 tb_code:_this.form.title,
-
               }
             )
             .then((response)=>{
@@ -208,6 +215,7 @@ import url from '../../../config/sysAPI.config.js';
             })
            
           },
+
           // 修改账号
           purchasechange(){
             this.dialogVisiblec=true
@@ -217,6 +225,7 @@ import url from '../../../config/sysAPI.config.js';
             // this.form1.title=this.multipleSelection[0].
 
           },
+
           //修改后保存
           saveNoticec(){
             var api = url.addPurinfo;
@@ -254,7 +263,7 @@ import url from '../../../config/sysAPI.config.js';
                 type: 'warning'
               }).then((action) => {
                 if(action==='confirm'){
-                    // console.log("6666666666669999999999999")
+
                     var api = url.delPurinfo
                     Axios.post(api,
                       {

@@ -1,0 +1,21 @@
+
+
+安装 supervisor
+npm install -g supervisor
+使用 supervisor 代替 node 命令启动应用
+
+node1:
+1.npm install
+2.node运行：supervisor app.js
+
+vue-admin-master：
+1.npm install
+2.vue-admin:运行： npm run dev
+3.打包：npm run build
+
+肇庆益华国际中心：
+登录：admin
+密码：123
+
+数据库表：7张
+

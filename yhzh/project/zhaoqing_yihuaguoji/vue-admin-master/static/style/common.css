@@ -1,0 +1,41 @@
+
+/* 智能化图标 */
+@font-face {
+  font-family: 'iconfont';
+   src: url('iconfont.eot');
+  src: url('iconfont.eot?#iefix') format('embedded-opentype'),
+  url('iconfont.woff') format('woff'),
+  url('iconfont.ttf') format('truetype'),
+  url('iconfont.svg#iconfont') format('svg');
+}
+/* 智能化图标 */
+@font-face {
+  font-family: 'iconfont'; 
+  src: url('jl.eot');
+  src: url('jl.eot?#iefix') format('embedded-opentype'),
+  url('jl.woff') format('woff'),
+  url('jl.ttf') format('truetype'),
+  url('jl.svg#iconfont') format('svg');
+}
+.jlicon,.iconfont{
+    font-family:"iconfont" !important;
+    font-size:38px;font-style:normal;
+    -webkit-font-smoothing: antialiased;
+    -webkit-text-stroke-width: 0.2px;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  .router-link-exact-active{
+    color: #20a0ff!important;
+  }
+ li{
+   list-style: none;
+ }
+ .icon-light{
+  font-size: 28px;
+ }
+ td{
+  text-align: center
+ }
+.el-table__body-wrapper {
+    height: 100%!important;
+    }

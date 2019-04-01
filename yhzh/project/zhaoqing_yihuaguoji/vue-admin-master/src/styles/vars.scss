@@ -1,0 +1,253 @@
+a{color:gray; text-decoration:none;}
+$color-primary: #20a0ff;//#18c79c
+$color-width: 160px;//#18c79c
+$color-height: 60px;//#18c79c
+  // 楼层显示界面
+  .lccontain{
+     display:flex;justify-content:space-between;margin:20px 20px;flex-wrap: wrap;
+     padding-right: 2%;
+      .m{width: $color-width;height: $color-height;text-align: center;font-size: 20px;line-height: $color-height;font-family: Microsoft Yahei; color: gray;border:2px solid #dfdfdf;cursor: pointer;float:left;}
+	  .b{position: relative;margin-top:16px;}
+	  .b span{display: inline-block;position: absolute;content: none;border: 0;width: 0;height: 0;}
+	  .b span.top{right:0;top:0;border-top:2px solid $color-primary;margin-top:-2px;}
+	  .b:hover span.top{width:$color-width;}
+	  .b span.right{right:0;bottom:0;border-right:2px solid $color-primary;margin-right:-2px;}
+	  .b:hover span.right{height:$color-height;}
+	  .b span.bottom{left:0;bottom:0;border-bottom:2px solid $color-primary;margin-bottom:-2px;}
+	  .b:hover span.bottom{width:$color-width;}
+	  .b span.left{left:0;top:0;border-left:2px solid $color-primary;margin-left:-2px;}
+	  .b:hover span.left{height:$color-height;}
+ }
+  .animate{transition: all 0.5s ease-in-out;}
+  .nav{border:none;border-bottom:2px solid #dfdfdf;}
+  // 楼层显示界面结束
+  // znh界面样式
+  .contain {
+		position: absolute;
+		top: 0px;
+		bottom: 0px;
+		.header {
+			height: 60px;
+			line-height: 60px;
+			background: $color-primary;
+			color:#fff;
+            z-index: 1999;
+            width: 100%;
+			.userinfo {
+				padding-right: 35px;
+				float: right;
+				.userinfo-inner {
+					cursor: pointer;
+					color:#fff;
+					img {
+						width: 40px;
+						height: 40px;
+						border-radius: 20px;
+						margin: 10px 0px 10px 10px;
+						float: right;
+					}
+				}
+			}
+			.logo {
+				height:60px;
+				font-size: 22px;
+				padding-left:20px;
+				padding-right:20px;
+				border-color: rgba(238,241,146,0.3);
+				border-right-width: 1px;
+				border-right-style: solid;
+				img {
+					width: 40px;
+					float: left;
+					margin: 10px 10px 10px 18px;
+				}
+				.txt {
+					color:#fff;
+				}
+			}
+			.logo-width{
+				width:230px;
+			}
+			.logo-collapse-width{
+				width:60px
+			}
+			.tools{
+				padding: 0px 23px;
+				width:14px;
+				height: 60px;
+				line-height: 60px;
+				cursor: pointer;
+			}
+		}
+	
+	}
+	.container {
+		position: absolute;
+		top: 0px;
+		bottom: 0px;
+		width: 100%;
+		.main {
+			display: flex;
+			position: absolute;
+			top: 60px;
+			bottom: 0px;
+			overflow: hidden;
+			aside {
+				flex:0 0 230px;
+				width: 230px;
+				.el-menu{
+					height: 100%;
+				}
+				.collapsed{
+					width:60px;
+					.item{
+						position: relative;
+					}
+					.submenu{
+						position:absolute;
+						top:0px;
+						left:60px;
+						z-index:99999;
+						height:auto;
+						display:none;
+					}
+
+				}
+			}
+			.menu-collapsed{
+				flex:0 0 60px;
+				width: 60px;
+			}
+			.menu-expanded{
+				flex:0 0 230px;
+				width: 230px;
+			}
+			.content-container {
+				flex:1;
+				overflow-y: scroll;
+				padding: 20px;
+				.breadcrumb-container {
+					.title {
+						width: 200px;
+						float: left;
+						color: #475669;
+					}
+					.breadcrumb-inner {
+						float: right;
+					}
+				}
+				.content-wrapper {
+					background-color: #fff;
+					box-sizing: border-box;
+				}
+			}
+		}
+	}
+// znh界面样式结束
+// kt界面样式
+ .kt_bg{
+   	width: 650px;
+    height: 227px;
+    margin:0 auto;
+    margin-top: 90px;
+   	background-size: 100%;
+   	position:relative;
+   	.kt_fj{
+        margin-top: 40px;
+        margin-left: 355px;
+   	}
+   	//回温温度
+   	.template{
+        position:absolute;
+   		top: 48px;
+   		left: 620px;
+   		width: 120px;
+   	}
+   	.time{
+   		 position:absolute;
+   		top: -48px;
+   		left: 280px;
+   	}
+   	// 过滤网
+   	.glw{
+        position:absolute;
+   		top: -48px;
+   		left: 30px;
+   	}
+   	.fanAlarm{
+   		border:0;
+   		padding:0;
+   		width:168px
+   	}
+   	.modelFile{
+   		width:154px;
+   		position:absolute;
+   		top: 154px;
+   	}
+   	//送风温度
+   	.Temperature{
+   		position:absolute;
+        top: -48px;
+   		left: 470px;
+   	}
+   // 送风口
+   	.sfFile{
+   		top: 210px;
+        left: 0px;
+   	}
+   	//风机
+   	.fsFile{
+       top: 210px;
+       left: 400px;
+   	}
+   	.el-button--primary{
+   	   margin-left: 14px
+   	}
+   }
+  	.fsdata{
+    padding: 4px 10px;
+	border: 2px solid #eef1f6;
+	background: #fbfdff;
+	width: 148px;
+	color: #97a8be;
+   	}
+   //背景显示样式
+    .time {
+    font-size: 13px;
+    color: #999;
+  }
+  .bottom {
+    margin-top: 13px;
+    line-height: 12px;
+  }
+
+  .button {
+    float: right;
+    border: 1px solid #20a0ff;
+    padding: 8px 12px;
+    margin-top: 12px;
+  }
+
+  .image {
+    width: 30%;
+    display: block;
+    margin: 0 auto;
+  }
+
+  .clearfix:before,
+  .clearfix:after {
+      display: table;
+      content: "";
+  }
+  
+  .clearfix:after {
+      clear: both
+  }
+  .el-icon-close{
+      margin-top: -92px;
+      margin-right: -5px;
+      font-size:20px
+  }
+  .el-table .warning-row {
+    background: oldlace;
+  }

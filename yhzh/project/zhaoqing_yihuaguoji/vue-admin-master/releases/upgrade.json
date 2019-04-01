@@ -1,0 +1,33 @@
+{
+  "name": "vueadmin",
+  "version": "1.0.5",
+  "description": "vue admin project",
+  "author": "taylor <709161610@qq.com>",
+  "main": "./index.html",
+  "window": {
+    "title": "vue-nw-seed",
+    "toolbar": true,
+    "width": 1280,
+    "height": 600,
+    "min_width": 800,
+    "min_height": 540,
+    "resizable": true,
+    "frame": true,
+    "kiosk": false,
+    "icon": "/static/logo.png",
+    "show_in_taskbar": true
+  },
+  "nodejs": true,
+  "js-flags": "--harmony",
+  "node-remote": "<all_urls>",
+  "packages": {
+    "win32": {
+      "url": "http://localhost:8080/releases/1.0.5/win32-setup/vueadmin-1.0.5.exe",
+      "size": 36563263
+    },
+    "win64": {
+      "url": "http://localhost:8080/releases/1.0.5/win64-setup/vueadmin-1.0.5.exe",
+      "size": 45734813
+    }
+  }
+}

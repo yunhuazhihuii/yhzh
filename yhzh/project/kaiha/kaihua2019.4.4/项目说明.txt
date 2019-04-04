@@ -1,0 +1,5 @@
+1.两个工程都要安装依赖模块：npm install 
+2.node1运行：supervisor app.js
+vue-admin:运行： npm run dev
+
+注：先跳过登陆，直接http://localhost:8080/home进页面。

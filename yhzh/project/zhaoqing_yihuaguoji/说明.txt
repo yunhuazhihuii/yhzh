@@ -17,5 +17,7 @@ vue-admin-master：
 登录：admin
 密码：123
 
-数据库表：7张
+
+代码位置：
+https://github.com/yunhuazhihuii/yhzh
 
